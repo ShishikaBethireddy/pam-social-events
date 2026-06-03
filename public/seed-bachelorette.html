@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Seeding · Bachelorette preview</title>
+  </head>
+  <body>
+    <script>
+      // Dev helper: seed the booking and jump to /estimate so the
+      // bachelorette layout can be inspected without driving the
+      // full chat flow.
+      sessionStorage.setItem(
+        "nobu_booking",
+        JSON.stringify({
+          eventType: "Bachelorette Party",
+          guests: "Standard bachelorette",
+          dates: "May 2027",
+          venue: "Umi Terrace",
+          fnb: "Family-Style · Pacific Restaurant",
+          name: "Sofia Marín",
+          email: "sofia@example.com",
+        }),
+      );
+      window.location.replace("/estimate");
+    </script>
+  </body>
+</html>

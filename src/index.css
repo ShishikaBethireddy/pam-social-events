@@ -1,0 +1,172 @@
+/* ============================================================
+   Social Events × RCD Design System
+   ------------------------------------------------------------
+   Canonical RCD tokens (fonts + hex palette) live in
+   ./styles/rcd-tokens.css. The HSL shadcn aliases below remap
+   --background / --foreground / --primary / --accent / etc. to
+   the RCD warm-cream palette so existing shadcn utilities
+   (bg-primary, text-accent, border-border) light up in the new
+   brand without rewriting every component.
+
+   Prefer the direct RCD utilities for new work:
+     bg-ink · bg-copper · bg-canvas · text-ink-soft
+     font-title · font-title-plain · font-sans · rounded-pill
+   ============================================================ */
+@import "./styles/rcd-tokens.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* All values are HSL channels so Tailwind's `hsl(var(--x))`
+       wrapper resolves correctly. Hex source of truth is in
+       rcd-tokens.css (`--color-*`). */
+
+    /* Surface: canvas (warm cream) + ink (charcoal) */
+    --background: 36 52% 93%;       /* canvas #F5EFE6 */
+    --foreground: 60 2% 16%;        /* ink #2A2A28 */
+
+    --card: 0 0% 100%;              /* paper */
+    --card-foreground: 60 2% 16%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 60 2% 16%;
+
+    /* Primary = ink (charcoal pill buttons, top bar) */
+    --primary: 60 2% 16%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary = cream (soft surfaces, tags) */
+    --secondary: 33 36% 86%;        /* cream #E8DDD0 */
+    --secondary-foreground: 60 2% 16%;
+
+    /* Muted = canvas-soft / cream-soft */
+    --muted: 36 43% 90%;            /* cream-soft #F0E8DC */
+    --muted-foreground: 39 9% 54%;  /* ink-muted #948D80 */
+
+    /* Accent = copper (the brand voice for moments, ribbons, eyebrows) */
+    --accent: 30 40% 50%;           /* copper #B4814D */
+    --accent-foreground: 0 0% 100%;
+
+    /* Gold alias kept for back-compat — points at copper-soft */
+    --gold: 33 47% 83%;
+    --gold-foreground: 60 2% 16%;
+
+    --destructive: 0 65% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 36 16% 75%;           /* border-default #C9C2B6 */
+    --input: 36 16% 75%;
+    --ring: 60 2% 16%;              /* ink focus ring */
+
+    /* RCD uses a pill radius; shadcn `lg` here gives us 12px /
+       cards / inputs that aren't pills. Use rounded-pill (in
+       tailwind config) for buttons + fields. */
+    --radius: 0.75rem;
+
+    /* Sidebar — left at neutral defaults, ink/canvas-leaning */
+    --sidebar-background: 36 52% 93%;
+    --sidebar-foreground: 60 2% 16%;
+    --sidebar-primary: 60 2% 16%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 33 36% 86%;
+    --sidebar-accent-foreground: 60 2% 16%;
+    --sidebar-border: 36 22% 87%;
+    --sidebar-ring: 30 40% 50%;
+  }
+
+  .dark {
+    /* Dark mode mirrors RCD palette with ink as surface and
+       paper-on-ink for text. Copper stays as the accent. */
+    --background: 60 2% 10%;
+    --foreground: 36 52% 93%;
+
+    --card: 60 2% 14%;
+    --card-foreground: 36 52% 93%;
+
+    --popover: 60 2% 14%;
+    --popover-foreground: 36 52% 93%;
+
+    --primary: 36 52% 93%;
+    --primary-foreground: 60 2% 10%;
+
+    --secondary: 60 2% 20%;
+    --secondary-foreground: 36 52% 93%;
+
+    --muted: 60 2% 18%;
+    --muted-foreground: 39 9% 70%;
+
+    --accent: 30 40% 55%;
+    --accent-foreground: 60 2% 10%;
+
+    --destructive: 0 60% 40%;
+    --destructive-foreground: 36 52% 93%;
+
+    --border: 60 2% 25%;
+    --input: 60 2% 25%;
+    --ring: 30 40% 55%;
+
+    --sidebar-background: 60 2% 10%;
+    --sidebar-foreground: 36 52% 93%;
+    --sidebar-primary: 36 52% 93%;
+    --sidebar-primary-foreground: 60 2% 10%;
+    --sidebar-accent: 60 2% 20%;
+    --sidebar-accent-foreground: 36 52% 93%;
+    --sidebar-border: 60 2% 25%;
+    --sidebar-ring: 30 40% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+  }
+
+  /* `font-serif` is referenced heavily across the existing Lovable
+     components (font-serif text-5xl, etc.). Point it at the RCD
+     title face so editorial hierarchy adopts Isabella Grand. */
+  .font-serif {
+    font-family: var(--font-title);
+    letter-spacing: -0.015em;
+  }
+}
+
+@layer utilities {
+  /* RCD eyebrow — Poppins semibold, copper, wide tracking */
+  .eyebrow {
+    @apply text-xs uppercase font-semibold;
+    color: var(--color-copper);
+    letter-spacing: 0.22em;
+  }
+
+  /* Cabo sunset gradient — three-stop horizontal sweep used on the
+     Social Events brand ribbon (twilight → plum → rose). Lives here
+     because Tailwind's color utilities can't express a multi-stop
+     linear-gradient in a single class. */
+  .bg-sunset-gradient {
+    background: var(--gradient-sunset);
+  }
+
+  /* Thin copper hairline used under eyebrows */
+  .hairline {
+    @apply h-px w-12;
+    background-color: var(--color-copper);
+  }
+
+  /* Convenience aliases pointing at the canonical RCD vars
+     for inline use (e.g. style={{ color: 'var(--color-copper)' }}). */
+  .font-title       { font-family: var(--font-title); }
+  .font-title-plain { font-family: var(--font-title-plain); }
+}

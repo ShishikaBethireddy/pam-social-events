@@ -1,0 +1,164 @@
+/* ============================================================
+   RCD Design System — Global Tokens
+   Extracted from Figma file FAF8ZGTyNyYOXtDSNU4ovB (May 2026)
+   ------------------------------------------------------------
+   These are the canonical RCD tokens. UI should reference them
+   via the Tailwind utilities exposed in tailwind.config.ts
+   (bg-ink, text-copper, font-title, rounded-pill, etc.) or via
+   var(--color-*) / var(--font-*) directly. Never hardcode hex,
+   px type sizes, or radii in components.
+   ============================================================ */
+
+/* ---- Display typeface: Isabella Grand --------------------- */
+/* Used for titles, hero headings, and editorial moments.     */
+/* The "Plain" cut drops the swashes for body-friendly use.   */
+@font-face {
+  font-family: "Isabella Grand";
+  src: url("/fonts/IsabellaGrand-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Isabella Grand";
+  src: url("/fonts/IsabellaGrand-Italic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Isabella Grand Plain";
+  src: url("/fonts/IsabellaGrand-Plain.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---- Body / UI typeface: Poppins -------------------------- */
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ----- Color: Brand & Surface (hex source of truth) ------- */
+  --color-ink:              #2A2A28;
+  --color-ink-soft:         #5A554D;
+  --color-ink-muted:        #948D80;
+
+  --color-paper:            #FFFFFF;
+  --color-canvas:           #F5EFE6;
+  --color-cream:            #E8DDD0;
+  --color-cream-soft:       #F0E8DC;
+
+  --color-copper:           #B4814D;
+  --color-copper-hover:     #9A6E40;
+  --color-copper-active:    #805B33;
+  --color-copper-soft:      #E8D5BD;
+
+  /* Cabo sunset — the social-events brand band. A warm dusk purple
+     anchored by a horizontal gradient from twilight → plum → rose. */
+  --color-sunset:           #7B4B94;
+  --color-sunset-hover:     #6A3F82;
+  --color-sunset-soft:      #C8AEDA;
+  --color-sunset-dawn:      #5B3A7A;
+  --color-sunset-plum:      #8E4585;
+  --color-sunset-rose:      #C66B96;
+  --gradient-sunset:        linear-gradient(
+    90deg,
+    var(--color-sunset-dawn) 0%,
+    var(--color-sunset-plum) 55%,
+    var(--color-sunset-rose) 100%
+  );
+
+  --color-disabled-bg:      #E5E0D8;
+  --color-disabled-fg:      #B8B0A6;
+
+  --color-border-strong:    #2A2A28;
+  --color-border-default:   #C9C2B6;
+  --color-border-subtle:    #E5E0D8;
+  --color-border-focus:     #2A2A28;
+
+  --color-on-ink:           #FFFFFF;
+  --color-on-copper:        #FFFFFF;
+
+  /* ----- Typography ------------------------------------------ */
+  /* Aligned with the pam-brides Social Events prototype:
+       · `--font-title`   → Cormorant Garamond (italic-friendly serif)
+       · `--font-display` → Playfair Display    (editorial headlines)
+       · `--font-sans`    → Poppins             (UI + body)
+     Isabella Grand is kept as a back-compat fallback for any
+     components that were authored against the RCD Figma. */
+  --font-title:        "Cormorant Garamond", "Isabella Grand", "Playfair Display", serif;
+  --font-title-plain:  "Cormorant Garamond", "Isabella Grand Plain", serif;
+  --font-display:      "Playfair Display", "Cormorant Garamond", "Isabella Grand", serif;
+  --font-sans:         "Poppins", "Inter", "Helvetica Neue", system-ui, -apple-system, sans-serif;
+  --font-body:         var(--font-sans);
+  --font-mono:         "JetBrains Mono", "SF Mono", Menlo, monospace;
+
+  --weight-light:    300;
+  --weight-regular:  400;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* ----- Spacing (4px base) ---------------------------------- */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* ----- Radii ----------------------------------------------- */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-pill: 9999px;
+
+  /* ----- Elevation ------------------------------------------- */
+  --shadow-sm: 0 1px 2px rgba(42, 42, 40, 0.06);
+  --shadow-md: 0 4px 12px rgba(42, 42, 40, 0.08);
+  --shadow-lg: 0 12px 32px rgba(42, 42, 40, 0.12);
+
+  /* ----- Motion ---------------------------------------------- */
+  --ease-out:  cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+
+  /* ----- Component: Button ---------------------------------- */
+  --btn-h-default: 44px;
+  --btn-h-small:   36px;
+  --btn-px-default: 24px;
+  --btn-px-small:   18px;
+  --btn-focus-ring: 0 0 0 3px var(--color-canvas), 0 0 0 5px var(--color-ink);
+}

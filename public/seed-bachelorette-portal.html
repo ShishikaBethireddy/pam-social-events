@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Seeding · Bachelorette portal preview</title>
+  </head>
+  <body>
+    <script>
+      // Dev helper: seed an authenticated user + a saved bachelorette
+      // estimate, then jump to /portal/{id} to preview the redesigned
+      // logged-in portal end-to-end.
+
+      const email = "sofia@example.com";
+      const id = crypto.randomUUID();
+
+      const users = JSON.parse(localStorage.getItem("nobu_users") || "{}");
+      users[email] = { password: "demo", name: "Sofia Marín", phone: "+1 555 555 0123" };
+      localStorage.setItem("nobu_users", JSON.stringify(users));
+      localStorage.setItem("nobu_session", email);
+
+      const estimate = {
+        id,
+        createdAt: Date.now(),
+        eventType: "Bachelorette Party",
+        guests: "1 bride + 11 bridesmaids",
+        dates: "Friday May 14 — Sunday May 16, 2027",
+        venue: "Nobu Hotel Los Cabos",
+        fnb: "Welcome cabana · Omakase dinner · Brunch",
+        subtotal: 17800,
+        deposit: 1500,
+        addOns: ["a-sash", "a-photo"],
+        stayBlock: {
+          enabled: true,
+          rooms: 6,
+          nights: 3,
+          confirmed: 7,
+        },
+        vendors: [
+          { id: crypto.randomUUID(), category: "Hair & Makeup", name: "Maven Glam Squad", status: "contracted" },
+          { id: crypto.randomUUID(), category: "Bride-tribe Photography", name: "Frame & Field", status: "proposal" },
+          { id: crypto.randomUUID(), category: "Catamaran & Yachts", name: "Pacific Sail Co.", status: "added" },
+        ],
+        itinerary: [],
+        guestList: [
+          { id: crypto.randomUUID(), name: "Maya Chen (Maid of Honor)", party: 1, invited: true, rsvp: "yes" },
+          { id: crypto.randomUUID(), name: "Priya Anand", party: 1, invited: true, rsvp: "yes" },
+          { id: crypto.randomUUID(), name: "Lena Park", party: 1, invited: true, rsvp: "yes" },
+          { id: crypto.randomUUID(), name: "Camille Okonkwo", party: 1, invited: true, rsvp: "pending" },
+          { id: crypto.randomUUID(), name: "Jess Romano", party: 1, invited: true, rsvp: "pending" },
+          { id: crypto.randomUUID(), name: "Hannah Mitchell", party: 1, invited: false, rsvp: "pending" },
+        ],
+      };
+
+      const key = `nobu_estimates_${email}`;
+      const list = JSON.parse(localStorage.getItem(key) || "[]");
+      list.unshift(estimate);
+      localStorage.setItem(key, JSON.stringify(list));
+
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get("tab") || "";
+      window.location.replace(`/portal/${id}${tab ? `#${tab}` : ""}`);
+    </script>
+  </body>
+</html>
