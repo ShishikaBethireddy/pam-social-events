@@ -150,6 +150,39 @@ export default {
         "border-strong": "var(--color-border-strong)",
         "border-default": "var(--color-border-default)",
         "border-subtle": "var(--color-border-subtle)",
+        "border-muted": "var(--color-border-muted)",
+        "border-brand": "var(--color-border-brand)",
+
+        // ----- PAM Partner Portal (agent prototype) -----------------------
+        // Ported from the pam-brides agent flow, re-themed to the Social
+        // Events purple/ink palette. Drives `bg-surface-*`, `text-text-*`,
+        // `bg-action-*` used across the src/components/agent/* tree.
+        surface: {
+          page: "var(--color-surface-page)",
+          default: "var(--color-surface-default)",
+          subtle: "var(--color-surface-subtle)",
+          brand: "var(--color-surface-brand)",
+          feature: "var(--color-surface-feature)",
+          inverse: "var(--color-surface-inverse)",
+          tinted: "var(--color-surface-tinted)",
+          overlay: "var(--color-surface-overlay)",
+          editorial: "var(--color-surface-editorial)",
+        },
+        text: {
+          primary: "var(--color-text-primary)",
+          secondary: "var(--color-text-secondary)",
+          tertiary: "var(--color-text-tertiary)",
+          inverse: "var(--color-text-inverse)",
+          "inverse-secondary": "var(--color-text-inverse-secondary)",
+          brand: "var(--color-text-brand)",
+          disabled: "var(--color-text-disabled)",
+        },
+        action: {
+          primary: "var(--color-action-primary)",
+          "primary-hover": "var(--color-action-primary-hover)",
+          "primary-text": "var(--color-action-primary-text)",
+          secondary: "var(--color-action-secondary)",
+        },
       },
 
       borderRadius: {

@@ -7,6 +7,14 @@ import {
 } from "lucide-react";
 import { estimates, SavedEstimate, useAuth } from "@/lib/auth";
 import bacheloretteHero from "@/assets/bachelorette-beach.jpg";
+import birthdayHero from "@/assets/event-birthday.jpg";
+import engagementHero from "@/assets/event-engagement.jpg";
+import showerHero from "@/assets/event-shower.jpg";
+import celebrationHero from "@/assets/hero-celebration.jpg";
+import rooftopHero from "@/assets/venue-rooftop.jpg";
+import diningHero from "@/assets/venue-private-dining.jpg";
+import ballroomHero from "@/assets/venue-ballroom.jpg";
+import poolsideHero from "@/assets/venue-poolside.jpg";
 import { Nav } from "@/components/nobu/Nav";
 import { MenuOverlay } from "@/components/nobu/MenuOverlay";
 import { SpecialistSheet } from "@/components/nobu/SpecialistSheet";
@@ -18,89 +26,451 @@ const fmtDateTime = (ts: number) =>
 
 type TabKey = "proposal" | "stay" | "vendors" | "itinerary" | "guests";
 
-// ── Bachelorette-flavored tab labels — the underlying data model
-// stays the same (proposal / stay / vendors / itinerary / guests)
-// so all persistence keeps working.
-const TABS: { key: TabKey; label: string }[] = [
-  { key: "proposal", label: "The Plan" },
-  { key: "stay", label: "The Suites" },
-  { key: "vendors", label: "Bride Squad" },
-  { key: "itinerary", label: "The Weekend" },
-  { key: "guests", label: "Bridesmaids" },
-];
+type AddOn = { id: string; title: string; desc: string; price: number };
 
-// What's included in the core bachelorette weekend package.
-const CORE_PLAN = [
-  "3-night private weekend at Nobu Hotel Los Cabos",
-  "Bride's deluxe suite + 5 shared bridesmaid suites",
-  "Welcome cabana & cocktail flight on arrival",
-  "Omakase tasting dinner at Nobu Restaurant",
-  "Group spa morning at Esencia (12 treatments)",
-  "Beach photoshoot with bride-tribe styling kit",
-  "Signature chef's table dinner at Yakusoku Garden",
-  "Farewell brunch with bottomless mimosas",
-  "Dedicated bachelorette concierge, 24/7",
-];
+// ── Event-type theme ────────────────────────────────────────────
+// The whole portal (hero image, copy, plan inclusions, add-ons, tab
+// labels and the group noun) is driven by the event type the planner
+// chose in the chat flow (stored on the estimate as `eventType`).
+type EventTheme = {
+  hero: string;
+  badge: string;
+  portalLabel: string;
+  /** Lead-in over the title, e.g. "Family Reunion · Nobu Los Cabos". */
+  eyebrow: string;
+  /** Rendered after "{firstName}'s", e.g. "family reunion". */
+  titleSuffix: string;
+  blurb: string;
+  /** Word used in running copy, e.g. "weekend" / "celebration". */
+  occasion: string;
+  /** Group-member noun, e.g. guest / bridesmaid / family member. */
+  noun: { singular: string; plural: string };
+  headcount: number;
+  /** Optional override for the hero head-count summary. */
+  groupSummary?: string;
+  tabs: Record<TabKey, string>;
+  planTitle: string;
+  plan: string[];
+  addonsTitle: string;
+  addons: AddOn[];
+  concierge: string;
+};
 
-// Bachelorette add-ons — designed for the maid of honor to tap
-// while planning, with prices the bridal party can split.
-const ADDON_CATALOG = [
-  { id: "a-glam", title: "Glam squad", desc: "On-suite hair + makeup for 12 bridesmaids", price: 3200 },
-  { id: "a-sash", title: "Sash & robe set", desc: "Matching satin robes + custom sashes, all 12", price: 980 },
-  { id: "a-catamaran", title: "Sunset catamaran", desc: "Private 3-hr sail with bar service", price: 4500 },
-  { id: "a-neon", title: "Custom neon sign", desc: "'Bride to be' or hashtag, 24×18 in", price: 650 },
-  { id: "a-balloon", title: "Balloon arch + photo wall", desc: "Blush + champagne palette, Polaroid station", price: 1450 },
-  { id: "a-mixology", title: "In-suite mixology class", desc: "Master mixologist, signature bride cocktail", price: 1100 },
-  { id: "a-late", title: "Late-night sushi + champagne", desc: "After-party in the bride's suite", price: 1850 },
-  { id: "a-photo", title: "Bride-tribe photographer", desc: "3-hour photoshoot + 100 edited shots", price: 2400 },
-];
+const DEFAULT_THEME: EventTheme = {
+  hero: celebrationHero,
+  badge: "Celebration portal",
+  portalLabel: "Celebration portal",
+  eyebrow: "Private celebration · Nobu Los Cabos",
+  titleSuffix: "celebration",
+  blurb:
+    "Your live planning portal — every space booked, every reservation held, every guest in the loop.",
+  occasion: "celebration",
+  noun: { singular: "guest", plural: "guests" },
+  headcount: 20,
+  tabs: {
+    proposal: "The Plan",
+    stay: "The Stay",
+    vendors: "Vendors",
+    itinerary: "The Itinerary",
+    guests: "Guests",
+  },
+  planTitle: "What the celebration includes",
+  plan: [
+    "Private venue at Nobu Hotel Los Cabos",
+    "Welcome cocktail reception on arrival",
+    "Signature multi-course Nobu dinner",
+    "Curated playlist & ambient lighting",
+    "Custom florals & table styling",
+    "Dedicated event concierge, on-site",
+    "Group room block at the preferred rate",
+    "Photography moment with the celebration backdrop",
+  ],
+  addonsTitle: "Make it yours",
+  addons: [
+    { id: "a-photo", title: "Event photographer", desc: "3-hour shoot + 100 edited shots", price: 2400 },
+    { id: "a-florals", title: "Statement florals", desc: "Premium centerpieces & install", price: 1850 },
+    { id: "a-band", title: "Live music set", desc: "Acoustic duo or DJ, 3 hours", price: 2200 },
+    { id: "a-bar", title: "Premium open bar", desc: "Top-shelf spirits & signature cocktail", price: 3200 },
+    { id: "a-cake", title: "Custom celebration cake", desc: "Designed with the pastry chef", price: 650 },
+    { id: "a-transport", title: "Guest transfers", desc: "Airport & venue shuttle service", price: 1450 },
+  ],
+  concierge: "Event concierge",
+};
 
+const EVENT_THEMES: Record<string, EventTheme> = {
+  bachelorette: {
+    hero: bacheloretteHero,
+    badge: "Bachelorette portal",
+    portalLabel: "Bachelorette weekend portal",
+    eyebrow: "Bachelorette weekend · Nobu Los Cabos",
+    titleSuffix: "last hurrah",
+    blurb:
+      "Your live planning portal — every space booked, every reservation held, every bridesmaid in the loop.",
+    occasion: "weekend",
+    noun: { singular: "bridesmaid", plural: "bridesmaids" },
+    headcount: 11,
+    groupSummary: "1 bride + 11 bridesmaids",
+    tabs: { proposal: "The Plan", stay: "The Suites", vendors: "Bride Squad", itinerary: "The Weekend", guests: "Bridesmaids" },
+    planTitle: "What the weekend includes",
+    plan: [
+      "3-night private weekend at Nobu Hotel Los Cabos",
+      "Bride's deluxe suite + 5 shared bridesmaid suites",
+      "Welcome cabana & cocktail flight on arrival",
+      "Omakase tasting dinner at Nobu Restaurant",
+      "Group spa morning at Esencia (12 treatments)",
+      "Beach photoshoot with bride-tribe styling kit",
+      "Signature chef's table dinner at Yakusoku Garden",
+      "Farewell brunch with bottomless mimosas",
+      "Dedicated bachelorette concierge, 24/7",
+    ],
+    addonsTitle: "Bachelorette add-ons",
+    addons: [
+      { id: "a-glam", title: "Glam squad", desc: "On-suite hair + makeup for 12", price: 3200 },
+      { id: "a-sash", title: "Sash & robe set", desc: "Matching satin robes + custom sashes", price: 980 },
+      { id: "a-catamaran", title: "Sunset catamaran", desc: "Private 3-hr sail with bar service", price: 4500 },
+      { id: "a-neon", title: "Custom neon sign", desc: "'Bride to be' or hashtag, 24×18 in", price: 650 },
+      { id: "a-balloon", title: "Balloon arch + photo wall", desc: "Blush + champagne palette", price: 1450 },
+      { id: "a-mixology", title: "In-suite mixology class", desc: "Signature bride cocktail", price: 1100 },
+    ],
+    concierge: "Bridal concierge",
+  },
+  bachelor: {
+    hero: rooftopHero,
+    badge: "Bachelor portal",
+    portalLabel: "Bachelor weekend portal",
+    eyebrow: "Bachelor weekend · Nobu Los Cabos",
+    titleSuffix: "last ride",
+    blurb:
+      "Your live planning portal — every space booked, every reservation held, every groomsman in the loop.",
+    occasion: "weekend",
+    noun: { singular: "groomsman", plural: "groomsmen" },
+    headcount: 11,
+    groupSummary: "1 groom + 11 groomsmen",
+    tabs: { proposal: "The Plan", stay: "The Suites", vendors: "The Crew", itinerary: "The Weekend", guests: "Groomsmen" },
+    planTitle: "What the weekend includes",
+    plan: [
+      "3-night private weekend at Nobu Hotel Los Cabos",
+      "Six suites held at the group rate",
+      "Rooftop welcome with craft cocktails",
+      "Omakase + wagyu tasting dinner",
+      "Deep-sea fishing charter morning",
+      "Poolside cabana day with bottle service",
+      "Cigar & whisky lounge evening",
+      "Recovery brunch before departure",
+      "Dedicated weekend concierge, 24/7",
+    ],
+    addonsTitle: "Bachelor add-ons",
+    addons: [
+      { id: "a-yacht", title: "Private yacht day", desc: "Top-deck bar, 4-hr charter", price: 5200 },
+      { id: "a-cigar", title: "Cigar & whisky tasting", desc: "Sommelier-led, rare pours", price: 1600 },
+      { id: "a-golf", title: "Championship golf round", desc: "Foursome + caddies, ocean course", price: 2400 },
+      { id: "a-cabana", title: "Poolside cabana + bottles", desc: "Reserved cabana, bottle service", price: 1850 },
+      { id: "a-fishing", title: "Deep-sea fishing charter", desc: "Half-day, crew & gear", price: 2100 },
+      { id: "a-chef", title: "In-suite private chef", desc: "Late-night sushi & wagyu", price: 1900 },
+    ],
+    concierge: "Weekend concierge",
+  },
+  engagement: {
+    hero: engagementHero,
+    badge: "Engagement portal",
+    portalLabel: "Engagement celebration portal",
+    eyebrow: "Engagement celebration · Nobu Los Cabos",
+    titleSuffix: "engagement",
+    blurb:
+      "Your live planning portal — every space booked, every reservation held, every guest in the loop.",
+    occasion: "celebration",
+    noun: { singular: "guest", plural: "guests" },
+    headcount: 40,
+    tabs: { proposal: "The Plan", stay: "The Stay", vendors: "Vendors", itinerary: "The Evening", guests: "Guests" },
+    planTitle: "What the celebration includes",
+    plan: [
+      "Private oceanfront terrace for the evening",
+      "Champagne welcome reception",
+      "Signature Nobu cocktail-and-canapé service",
+      "Multi-course celebration dinner",
+      "Statement floral install & candlelight",
+      "Live acoustic set during cocktails",
+      "Engagement photo moment at golden hour",
+      "Group room block at the preferred rate",
+      "Dedicated event concierge, on-site",
+    ],
+    addonsTitle: "Engagement add-ons",
+    addons: [
+      { id: "a-photo", title: "Engagement photographer", desc: "Golden-hour shoot + 120 shots", price: 2600 },
+      { id: "a-florals", title: "Statement florals", desc: "Arch + tablescape install", price: 2400 },
+      { id: "a-champagne", title: "Champagne tower", desc: "Coupe tower + premium pour", price: 1500 },
+      { id: "a-band", title: "Live jazz trio", desc: "3-hour set during dinner", price: 2800 },
+      { id: "a-neon", title: "Custom neon sign", desc: "Couple's names or initials", price: 650 },
+      { id: "a-fireworks", title: "Sparkler send-off", desc: "Coordinated finale moment", price: 1200 },
+    ],
+    concierge: "Event concierge",
+  },
+  babyShower: {
+    hero: showerHero,
+    badge: "Baby shower portal",
+    portalLabel: "Baby shower portal",
+    eyebrow: "Baby shower · Nobu Los Cabos",
+    titleSuffix: "baby shower",
+    blurb:
+      "Your live planning portal — every space booked, every reservation held, every guest in the loop.",
+    occasion: "shower",
+    noun: { singular: "guest", plural: "guests" },
+    headcount: 25,
+    tabs: { proposal: "The Plan", stay: "The Stay", vendors: "Vendors", itinerary: "The Afternoon", guests: "Guests" },
+    planTitle: "What the shower includes",
+    plan: [
+      "Garden terrace reserved for the afternoon",
+      "Welcome mocktail & juice bar",
+      "Light Nobu lunch & dessert spread",
+      "Soft pastel floral styling",
+      "Gift & display table setup",
+      "Keepsake photo corner",
+      "Games & activities station",
+      "Dedicated event host, on-site",
+    ],
+    addonsTitle: "Baby shower add-ons",
+    addons: [
+      { id: "a-florals", title: "Pastel floral install", desc: "Arch + centerpieces", price: 1450 },
+      { id: "a-dessert", title: "Dessert & cake table", desc: "Custom cake + treats", price: 980 },
+      { id: "a-photo", title: "Shower photographer", desc: "2-hour candid coverage", price: 1600 },
+      { id: "a-favors", title: "Custom guest favors", desc: "Personalized keepsakes", price: 750 },
+      { id: "a-balloon", title: "Balloon & photo wall", desc: "Themed backdrop + Polaroids", price: 1100 },
+      { id: "a-grazing", title: "Grazing & mocktail bar", desc: "Artisan spread + drinks", price: 1300 },
+    ],
+    concierge: "Event concierge",
+  },
+  birthday: {
+    hero: birthdayHero,
+    badge: "Birthday portal",
+    portalLabel: "Birthday celebration portal",
+    eyebrow: "Birthday celebration · Nobu Los Cabos",
+    titleSuffix: "birthday",
+    blurb:
+      "Your live planning portal — every space booked, every reservation held, every guest in the loop.",
+    occasion: "celebration",
+    noun: { singular: "guest", plural: "guests" },
+    headcount: 30,
+    tabs: { proposal: "The Plan", stay: "The Stay", vendors: "Vendors", itinerary: "The Night", guests: "Guests" },
+    planTitle: "What the celebration includes",
+    plan: [
+      "Private venue at Nobu Hotel Los Cabos",
+      "Welcome cocktail reception",
+      "Signature multi-course Nobu dinner",
+      "Custom birthday cake moment",
+      "DJ & dance floor with lighting",
+      "Florals & table styling",
+      "Photo backdrop & party setup",
+      "Group room block at the preferred rate",
+      "Dedicated event concierge, on-site",
+    ],
+    addonsTitle: "Birthday add-ons",
+    addons: [
+      { id: "a-dj", title: "DJ & dance floor", desc: "4-hour set, lighting rig", price: 2600 },
+      { id: "a-cake", title: "Designer birthday cake", desc: "Custom tiered cake", price: 750 },
+      { id: "a-photo", title: "Party photographer", desc: "3-hour coverage + edits", price: 2200 },
+      { id: "a-bar", title: "Premium open bar", desc: "Top-shelf + signature cocktail", price: 3200 },
+      { id: "a-neon", title: "Custom neon sign", desc: "Name or age, photo-ready", price: 650 },
+      { id: "a-fireworks", title: "Sparkler & fireworks finale", desc: "Coordinated send-off", price: 1900 },
+    ],
+    concierge: "Event concierge",
+  },
+  anniversary: {
+    hero: diningHero,
+    badge: "Anniversary portal",
+    portalLabel: "Anniversary celebration portal",
+    eyebrow: "Anniversary celebration · Nobu Los Cabos",
+    titleSuffix: "anniversary",
+    blurb:
+      "Your live planning portal — every space booked, every reservation held, every guest in the loop.",
+    occasion: "celebration",
+    noun: { singular: "guest", plural: "guests" },
+    headcount: 24,
+    tabs: { proposal: "The Plan", stay: "The Stay", vendors: "Vendors", itinerary: "The Evening", guests: "Guests" },
+    planTitle: "What the celebration includes",
+    plan: [
+      "Private dining room or terrace for the evening",
+      "Champagne welcome toast",
+      "Chef's tasting menu with wine pairing",
+      "Romantic candlelight & floral styling",
+      "Live acoustic music during dinner",
+      "Anniversary photo moment",
+      "Group room block at the preferred rate",
+      "Dedicated event concierge, on-site",
+    ],
+    addonsTitle: "Anniversary add-ons",
+    addons: [
+      { id: "a-wine", title: "Sommelier wine pairing", desc: "Reserve pours per course", price: 1600 },
+      { id: "a-florals", title: "Romantic floral install", desc: "Tablescape + candles", price: 1850 },
+      { id: "a-photo", title: "Anniversary photographer", desc: "2-hour coverage + edits", price: 1900 },
+      { id: "a-music", title: "Live jazz duo", desc: "3-hour set during dinner", price: 2400 },
+      { id: "a-cake", title: "Celebration cake", desc: "Custom with the pastry chef", price: 650 },
+      { id: "a-spa", title: "Couples spa morning", desc: "Side-by-side treatments", price: 1100 },
+    ],
+    concierge: "Event concierge",
+  },
+  familyReunion: {
+    hero: poolsideHero,
+    badge: "Family reunion portal",
+    portalLabel: "Family reunion portal",
+    eyebrow: "Family reunion · Nobu Los Cabos",
+    titleSuffix: "family reunion",
+    blurb:
+      "Your live planning portal — every space booked, every reservation held, every family member in the loop.",
+    occasion: "reunion",
+    noun: { singular: "family member", plural: "family members" },
+    headcount: 30,
+    tabs: { proposal: "The Plan", stay: "The Suites", vendors: "Vendors", itinerary: "The Weekend", guests: "Family" },
+    planTitle: "What the reunion includes",
+    plan: [
+      "Multi-day private weekend at Nobu Hotel Los Cabos",
+      "Family room block across connecting suites",
+      "Poolside welcome with kids' menu",
+      "Family-style Nobu feast dinner",
+      "Group beach & pool day setup",
+      "Multi-generational photo session",
+      "Farewell brunch for the whole family",
+      "Group room block at the preferred rate",
+      "Dedicated family concierge, on-site",
+    ],
+    addonsTitle: "Family add-ons",
+    addons: [
+      { id: "a-photo", title: "Family photographer", desc: "Group + candid, 100 shots", price: 2400 },
+      { id: "a-kids", title: "Kids' club & sitters", desc: "Supervised activities", price: 1200 },
+      { id: "a-catamaran", title: "Family catamaran sail", desc: "Private 3-hr sail", price: 4500 },
+      { id: "a-bbq", title: "Beach BBQ & bonfire", desc: "Grill stations + s'mores", price: 1850 },
+      { id: "a-spa", title: "Group spa afternoon", desc: "Treatments for the adults", price: 1600 },
+      { id: "a-transport", title: "Group transfers", desc: "Airport & venue shuttle", price: 1450 },
+    ],
+    concierge: "Family concierge",
+  },
+  holiday: {
+    hero: ballroomHero,
+    badge: "Holiday portal",
+    portalLabel: "Holiday gathering portal",
+    eyebrow: "Holiday gathering · Nobu Los Cabos",
+    titleSuffix: "holiday gathering",
+    blurb:
+      "Your live planning portal — every space booked, every reservation held, every guest in the loop.",
+    occasion: "gathering",
+    noun: { singular: "guest", plural: "guests" },
+    headcount: 22,
+    tabs: { proposal: "The Plan", stay: "The Stay", vendors: "Vendors", itinerary: "The Evening", guests: "Guests" },
+    planTitle: "What the gathering includes",
+    plan: [
+      "Private ballroom or terrace for the evening",
+      "Festive welcome cocktail reception",
+      "Seasonal Nobu tasting dinner",
+      "Holiday florals & warm lighting",
+      "Live music or curated playlist",
+      "Group photo moment by the décor",
+      "Group room block at the preferred rate",
+      "Dedicated event concierge, on-site",
+    ],
+    addonsTitle: "Holiday add-ons",
+    addons: [
+      { id: "a-decor", title: "Seasonal décor package", desc: "Themed install + lighting", price: 2200 },
+      { id: "a-band", title: "Live music set", desc: "Trio or DJ, 3 hours", price: 2400 },
+      { id: "a-photo", title: "Event photographer", desc: "3-hour coverage + edits", price: 2200 },
+      { id: "a-bar", title: "Premium open bar", desc: "Seasonal signature cocktails", price: 3200 },
+      { id: "a-gifts", title: "Guest gift favors", desc: "Custom seasonal keepsakes", price: 950 },
+      { id: "a-cake", title: "Dessert & cake table", desc: "Pastry chef spread", price: 850 },
+    ],
+    concierge: "Event concierge",
+  },
+  privateDinner: {
+    hero: diningHero,
+    badge: "Private dinner portal",
+    portalLabel: "Private dinner portal",
+    eyebrow: "Private dinner · Nobu Los Cabos",
+    titleSuffix: "private dinner",
+    blurb:
+      "Your live planning portal — every space booked, every reservation held, every guest in the loop.",
+    occasion: "dinner",
+    noun: { singular: "guest", plural: "guests" },
+    headcount: 14,
+    tabs: { proposal: "The Plan", stay: "The Stay", vendors: "Vendors", itinerary: "The Evening", guests: "Guests" },
+    planTitle: "What the dinner includes",
+    plan: [
+      "Private dining room or chef's table",
+      "Champagne welcome on arrival",
+      "Multi-course omakase tasting menu",
+      "Sommelier wine pairing option",
+      "Candlelight & intimate floral styling",
+      "Personalized printed menus",
+      "Dedicated maître d', on-site",
+    ],
+    addonsTitle: "Private dinner add-ons",
+    addons: [
+      { id: "a-wine", title: "Sommelier wine pairing", desc: "Reserve pours per course", price: 1600 },
+      { id: "a-sake", title: "Premium sake flight", desc: "Curated by the bar team", price: 900 },
+      { id: "a-florals", title: "Tablescape florals", desc: "Low centerpieces + candles", price: 850 },
+      { id: "a-photo", title: "Dinner photographer", desc: "90-min candid coverage", price: 1200 },
+      { id: "a-cake", title: "Celebration dessert", desc: "Custom plated finale", price: 550 },
+      { id: "a-music", title: "Acoustic soloist", desc: "2-hour ambient set", price: 1400 },
+    ],
+    concierge: "Dining concierge",
+  },
+};
+
+function resolveTheme(eventType?: string): EventTheme {
+  if (!eventType) return DEFAULT_THEME;
+  const t = eventType.toLowerCase();
+  if (t.includes("bachelorette")) return EVENT_THEMES.bachelorette;
+  if (t.includes("bachelor")) return EVENT_THEMES.bachelor;
+  if (t.includes("engagement")) return EVENT_THEMES.engagement;
+  if (t.includes("baby") || t.includes("shower")) return EVENT_THEMES.babyShower;
+  if (t.includes("anniversary")) return EVENT_THEMES.anniversary;
+  if (t.includes("family") || t.includes("reunion")) return EVENT_THEMES.familyReunion;
+  if (t.includes("holiday")) return EVENT_THEMES.holiday;
+  if (t.includes("dinner")) return EVENT_THEMES.privateDinner;
+  if (t.includes("birthday")) return EVENT_THEMES.birthday;
+  return DEFAULT_THEME;
+}
+
+// ── Shared (event-neutral) social-event catalogs ────────────────
 const VENDOR_CATEGORIES = [
-  "Maid of Honor support", "Hair & Makeup", "Bride-tribe Photography",
-  "Sashes & Accessories", "Catamaran & Yachts", "Florals & Décor",
-  "Mixologists", "Glam wellness",
+  "Event planning", "Hair & Makeup", "Photography", "Florals & Décor",
+  "Entertainment & DJ", "Mixology & Bar", "Spa & Wellness", "Transportation",
 ];
 
 const VENDOR_DIRECTORY = [
-  { category: "Maid of Honor support", name: "Cabo Bachelorette Co.", tag: "Full-weekend planning", rating: 4.9 },
-  { category: "Maid of Honor support", name: "Hen Party Concierge", tag: "On-site coordinator", rating: 4.8 },
-  { category: "Hair & Makeup", name: "Maven Glam Squad", tag: "On-suite for 12", rating: 4.9 },
-  { category: "Hair & Makeup", name: "Sunset Studio Stylists", tag: "Beach-ready looks", rating: 4.8 },
-  { category: "Bride-tribe Photography", name: "Frame & Field", tag: "Documentary candid", rating: 4.9 },
-  { category: "Bride-tribe Photography", name: "Golden Hour Co.", tag: "Editorial portrait", rating: 4.8 },
-  { category: "Sashes & Accessories", name: "Pearl & Veil Atelier", tag: "Custom monogrammed", rating: 4.9 },
-  { category: "Sashes & Accessories", name: "Hen House Boutique", tag: "Robe + sash sets", rating: 4.7 },
-  { category: "Catamaran & Yachts", name: "Pacific Sail Co.", tag: "Private sunset sail", rating: 4.9 },
-  { category: "Catamaran & Yachts", name: "Cabo Luxe Yachts", tag: "Top-deck bar", rating: 4.8 },
-  { category: "Florals & Décor", name: "Wildflower Studio", tag: "Blush + champagne", rating: 4.8 },
-  { category: "Florals & Décor", name: "Atelier Bloom", tag: "Statement installs", rating: 4.7 },
-  { category: "Mixologists", name: "Highball Hospitality", tag: "Bride's signature cocktail", rating: 4.8 },
-  { category: "Glam wellness", name: "Esencia Spa", tag: "Group treatments", rating: 4.9 },
+  { category: "Event planning", name: "Cabo Celebrations Co.", tag: "Full-event coordination", rating: 4.9 },
+  { category: "Event planning", name: "Baja Soirée Concierge", tag: "On-site coordinator", rating: 4.8 },
+  { category: "Hair & Makeup", name: "Maven Glam Studio", tag: "On-site styling team", rating: 4.9 },
+  { category: "Hair & Makeup", name: "Sunset Studio Stylists", tag: "Event-ready looks", rating: 4.8 },
+  { category: "Photography", name: "Frame & Field", tag: "Documentary candid", rating: 4.9 },
+  { category: "Photography", name: "Golden Hour Co.", tag: "Editorial portrait", rating: 4.8 },
+  { category: "Florals & Décor", name: "Wildflower Studio", tag: "Statement installs", rating: 4.8 },
+  { category: "Florals & Décor", name: "Atelier Bloom", tag: "Tablescapes & arches", rating: 4.7 },
+  { category: "Entertainment & DJ", name: "Hightide DJs", tag: "Dance floor energy", rating: 4.8 },
+  { category: "Entertainment & DJ", name: "Baja Live Music", tag: "Bands & ensembles", rating: 4.8 },
+  { category: "Mixology & Bar", name: "Highball Hospitality", tag: "Signature cocktails", rating: 4.8 },
+  { category: "Spa & Wellness", name: "Esencia Spa", tag: "Group treatments", rating: 4.9 },
+  { category: "Transportation", name: "Cabo Luxe Transfers", tag: "Airport & venue shuttle", rating: 4.7 },
 ];
 
-// 3-day bachelorette weekend run-sheet — mirrors the structure shown
-// on the estimate page so the bride sees the same agenda end-to-end.
+// Default social-event run-sheet — neutral so it reads well for any
+// event type (the planner can add type-specific moments themselves).
 const DEFAULT_ITINERARY = [
-  { id: "i1", day: 1, time: "4:00 PM", title: "Welcome cabana & cocktails", location: "Beach Pool · Friday" },
+  { id: "i1", day: 1, time: "4:00 PM", title: "Welcome reception & cocktails", location: "Beach Pool · Friday" },
   { id: "i2", day: 1, time: "7:30 PM", title: "Welcome dinner — omakase tasting", location: "Nobu Restaurant · Friday" },
-  { id: "i3", day: 2, time: "10:00 AM", title: "Group spa morning", location: "Esencia Spa · Saturday" },
-  { id: "i4", day: 2, time: "1:30 PM", title: "Light lunch on the terrace", location: "Malibu Farm · Saturday" },
-  { id: "i5", day: 2, time: "4:00 PM", title: "Beach photoshoot & bride-tribe setup", location: "Pedregal Beach · Saturday" },
-  { id: "i6", day: 2, time: "8:00 PM", title: "Signature chef's table dinner", location: "Yakusoku Garden · Saturday" },
-  { id: "i7", day: 3, time: "11:00 AM", title: "Farewell brunch with bottomless mimosas", location: "Shiawase Terrace · Sunday" },
+  { id: "i3", day: 2, time: "10:00 AM", title: "Group spa & leisure morning", location: "Esencia Spa · Saturday" },
+  { id: "i4", day: 2, time: "1:30 PM", title: "Lunch on the terrace", location: "Malibu Farm · Saturday" },
+  { id: "i5", day: 2, time: "8:00 PM", title: "Signature chef's table dinner", location: "Yakusoku Garden · Saturday" },
+  { id: "i6", day: 3, time: "11:00 AM", title: "Farewell brunch", location: "Shiawase Terrace · Sunday" },
 ];
 
-// Activities the maid of honor can drop into the weekend.
+// Activities the host can drop into the schedule.
 const ACTIVITY_CATALOG = [
-  { title: "Mr. & Mrs. game", note: "10 min with the bride and her partner on speakerphone" },
-  { title: "Bridal trivia & superlatives", note: "Host-led — 'Most likely to cry first', etc." },
-  { title: "Lingerie shower hour", note: "Reserved suite, champagne service, gift opening" },
-  { title: "Polaroid scavenger hunt", note: "Teams of 3, photo prompts around the resort" },
   { title: "Wine pairing tasting", note: "Sommelier-led, 5 pours with light bites" },
-  { title: "Karaoke after-party", note: "Curated bride songbook, pro mic + screen" },
   { title: "Group dance lesson", note: "Latin / salsa basics with a local instructor" },
+  { title: "Sunset catamaran sail", note: "Private 3-hour sail with bar service" },
+  { title: "In-suite mixology class", note: "Master mixologist, signature cocktail" },
   { title: "Beach bonfire & s'mores", note: "Sunset bonfire, blanket setup, late-night sweets" },
-  { title: "Bride bingo", note: "Cards customized to the bride, prizes for full board" },
+  { title: "Karaoke after-party", note: "Curated songbook, pro mic + screen" },
+  { title: "Live music set", note: "Acoustic duo or local ensemble" },
+  { title: "Group spa hour", note: "Reserved treatments for the party" },
+  { title: "Photo scavenger hunt", note: "Teams of 3, prompts around the resort" },
 ];
 
 const EventPortal = () => {
@@ -126,6 +496,8 @@ const EventPortal = () => {
     setEst(estimates.get(user.email, id) ?? null);
   }, [user, id, navigate]);
 
+  const theme = useMemo(() => resolveTheme(est?.eventType), [est?.eventType]);
+
   const persist = (patch: Partial<SavedEstimate>) => {
     if (!user || !id || !est) return;
     const next = { ...est, ...patch };
@@ -138,7 +510,7 @@ const EventPortal = () => {
     return (
       <div className="min-h-screen bg-background text-foreground">
         <div className="mx-auto max-w-xl px-6 py-20 text-center">
-          <p className="text-muted-foreground">We couldn't find that bachelorette weekend.</p>
+          <p className="text-muted-foreground">We couldn't find that celebration.</p>
           <Link to="/account" className="mt-4 inline-block text-sm underline underline-offset-4">
             Back to your account
           </Link>
@@ -151,15 +523,15 @@ const EventPortal = () => {
   const subtotal = est.subtotal ?? 7800;
   const deposit = est.deposit ?? 500;
   const addOnTotal = (est.addOns ?? []).reduce(
-    (s, addonId) => s + (ADDON_CATALOG.find((a) => a.id === addonId)?.price ?? 0), 0,
+    (s, addonId) => s + (theme.addons.find((a) => a.id === addonId)?.price ?? 0), 0,
   );
   const totalEstimate = subtotal + addOnTotal;
 
-  // Bachelorette-specific derived figures.
-  const totalGuests = 12;
-  const bridesmaids = totalGuests - 1;
-  const perBridesmaid = Math.round(totalEstimate / bridesmaids);
+  // Group economics — driven by the event theme head-count.
+  const headcount = theme.headcount;
+  const perPerson = Math.round(totalEstimate / Math.max(headcount, 1));
   const firstName = user.name?.split(" ")[0] || "Sofia";
+  const groupSummary = theme.groupSummary ?? `${headcount} ${theme.noun.plural}`;
 
   return (
     <div className="min-h-screen bg-[#FBF6EE] pb-24 text-foreground">
@@ -178,47 +550,46 @@ const EventPortal = () => {
             <ArrowLeft className="h-4 w-4" /> Account
           </Link>
           <p className="font-serif text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-            Bachelorette weekend portal
+            {theme.portalLabel}
           </p>
           <div className="hidden text-xs text-muted-foreground sm:block">{user.email}</div>
         </div>
       </div>
 
-      {/* Bachelorette hero — postcard split */}
+      {/* Event hero — postcard split */}
       <section className="border-b border-border bg-white">
         <div className="mx-auto grid max-w-5xl grid-cols-1 md:grid-cols-[1fr_1.1fr]">
           <div className="relative h-[220px] overflow-hidden md:h-auto">
             <img
-              src={bacheloretteHero}
-              alt="Bridesmaids celebrating on the beach"
+              src={theme.hero}
+              alt={theme.eyebrow}
               className="absolute inset-0 h-full w-full object-cover"
             />
             <div className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-background/85 px-3 py-1.5 font-serif text-[10px] uppercase tracking-[0.3em] text-foreground backdrop-blur">
               <Sparkles className="h-3 w-3 text-accent" strokeWidth={1.8} />
-              Bachelorette portal
+              {theme.badge}
             </div>
           </div>
           <div className="relative flex flex-col justify-center gap-4 bg-white px-6 py-8 md:px-10 md:py-12">
             <p className="font-serif text-[10px] uppercase tracking-[0.4em] text-accent">
-              Bachelorette weekend · Nobu Los Cabos
+              {theme.eyebrow}
             </p>
             <h1 className="font-serif text-4xl leading-[1.05] sm:text-5xl">
-              <span className="italic">{firstName}&rsquo;s</span> last hurrah
+              <span className="italic">{firstName}&rsquo;s</span> {theme.titleSuffix}
             </h1>
             <p className="max-w-md font-serif text-[14px] italic leading-relaxed text-muted-foreground">
-              Your live planning portal — every space booked, every reservation
-              held, every bridesmaid in the loop.
+              {theme.blurb}
             </p>
             <div className="mt-1 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted-foreground">
               {est.dates && (
                 <span className="flex items-center gap-1.5">
                   <Calendar className="h-4 w-4 text-accent" />
-                  {est.dates} · 3 nights
+                  {est.dates}
                 </span>
               )}
               <span className="flex items-center gap-1.5">
                 <Users className="h-4 w-4 text-accent" />
-                1 bride + {bridesmaids} bridesmaids
+                {groupSummary}
               </span>
               <span className="flex items-center gap-1.5">
                 <MapPin className="h-4 w-4 text-accent" />
@@ -231,17 +602,17 @@ const EventPortal = () => {
         {/* Tabs */}
         <div className="mx-auto max-w-5xl overflow-x-auto px-6">
           <nav className="flex gap-1 border-b-0">
-            {TABS.map((t) => (
+            {(Object.keys(theme.tabs) as TabKey[]).map((key) => (
               <button
-                key={t.key}
-                onClick={() => setTab(t.key)}
+                key={key}
+                onClick={() => setTab(key)}
                 className={`whitespace-nowrap border-b-2 px-4 py-3 font-serif text-sm transition-colors ${
-                  tab === t.key
+                  tab === key
                     ? "border-foreground italic text-foreground"
                     : "border-transparent text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {t.label}
+                {theme.tabs[key]}
               </button>
             ))}
           </nav>
@@ -252,13 +623,14 @@ const EventPortal = () => {
         {tab === "proposal" && (
           <ProposalTab
             est={est}
+            theme={theme}
             paid={paid}
             subtotal={subtotal}
             deposit={deposit}
             addOnTotal={addOnTotal}
             totalEstimate={totalEstimate}
-            perBridesmaid={perBridesmaid}
-            bridesmaids={bridesmaids}
+            perPerson={perPerson}
+            headcount={headcount}
             user={user}
             firstName={firstName}
             onToggleAddOn={(addonId) => {
@@ -269,10 +641,10 @@ const EventPortal = () => {
             }}
           />
         )}
-        {tab === "stay" && <StayTab est={est} persist={persist} />}
-        {tab === "vendors" && <VendorsTab est={est} persist={persist} />}
-        {tab === "itinerary" && <ItineraryTab est={est} persist={persist} />}
-        {tab === "guests" && <GuestsTab est={est} persist={persist} bridesmaids={bridesmaids} />}
+        {tab === "stay" && <StayTab est={est} persist={persist} theme={theme} />}
+        {tab === "vendors" && <VendorsTab est={est} persist={persist} theme={theme} />}
+        {tab === "itinerary" && <ItineraryTab est={est} persist={persist} theme={theme} />}
+        {tab === "guests" && <GuestsTab est={est} persist={persist} theme={theme} headcount={headcount} />}
       </main>
 
       {/* Sticky footer */}
@@ -280,11 +652,11 @@ const EventPortal = () => {
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-3 text-sm">
           <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
             <span className="font-serif text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-              Weekend total
+              Estimated total
             </span>
             <span className="font-serif text-lg">${totalEstimate.toLocaleString()}</span>
             <span className="hidden font-serif text-xs italic text-muted-foreground sm:inline">
-              · ~${perBridesmaid.toLocaleString()} / bridesmaid
+              · ~${perPerson.toLocaleString()} / {theme.noun.singular}
             </span>
             <span className="hidden text-xs text-muted-foreground sm:inline">
               · ${deposit} deposit {paid ? "paid" : "due"}
@@ -294,7 +666,7 @@ const EventPortal = () => {
             href="tel:+15555550199"
             className="flex items-center gap-2 rounded-full bg-foreground px-4 py-2 font-serif text-[11px] uppercase tracking-[0.22em] text-background hover:bg-foreground/90"
           >
-            <Phone className="h-3.5 w-3.5" /> Bridal concierge
+            <Phone className="h-3.5 w-3.5" /> {theme.concierge}
           </a>
         </div>
       </footer>
@@ -327,12 +699,12 @@ const EventPortal = () => {
 /* ----------------- Tabs ----------------- */
 
 const ProposalTab = ({
-  est, paid, subtotal, deposit, addOnTotal, totalEstimate, perBridesmaid,
-  bridesmaids, user, firstName, onToggleAddOn,
+  est, theme, paid, subtotal, deposit, addOnTotal, totalEstimate, perPerson,
+  headcount, user, firstName, onToggleAddOn,
 }: {
-  est: SavedEstimate; paid: boolean; subtotal: number; deposit: number;
-  addOnTotal: number; totalEstimate: number; perBridesmaid: number;
-  bridesmaids: number; user: { email: string }; firstName: string;
+  est: SavedEstimate; theme: EventTheme; paid: boolean; subtotal: number; deposit: number;
+  addOnTotal: number; totalEstimate: number; perPerson: number;
+  headcount: number; user: { email: string }; firstName: string;
   onToggleAddOn: (id: string) => void;
 }) => {
   const selected = new Set(est.addOns ?? []);
@@ -344,10 +716,10 @@ const ProposalTab = ({
           <CheckCircle2 className="mt-0.5 h-7 w-7 flex-none text-accent" />
           <div>
             <p className="font-serif text-[10px] uppercase tracking-[0.3em] text-accent">
-              Weekend locked in
+              {theme.occasion} locked in
             </p>
             <h2 className="mt-2 font-serif text-2xl italic">
-              {firstName}&rsquo;s weekend is officially on the books.
+              {firstName}&rsquo;s {theme.occasion} is officially on the books.
             </h2>
             <p className="mt-2 font-serif text-sm italic text-muted-foreground">
               ${deposit} deposit received {fmtDateTime(est.paidAt!)}. Receipt sent to {user.email}.
@@ -362,10 +734,10 @@ const ProposalTab = ({
               Estimate ready
             </p>
             <h2 className="mt-2 font-serif text-2xl italic">
-              Hold the weekend with a ${deposit} deposit.
+              Hold the {theme.occasion} with a ${deposit} deposit.
             </h2>
             <p className="mt-2 font-serif text-sm italic text-muted-foreground">
-              Refundable up to 14 days before the bachelorette weekend.
+              Refundable up to 14 days before the {theme.occasion}.
             </p>
           </div>
         </Banner>
@@ -373,9 +745,9 @@ const ProposalTab = ({
 
       {/* Core plan */}
       <Card>
-        <CardHeader eyebrow="The Plan" title="What the weekend includes" />
+        <CardHeader eyebrow="The Plan" title={theme.planTitle} />
         <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-          {CORE_PLAN.map((b) => (
+          {theme.plan.map((b) => (
             <li key={b} className="flex items-start gap-3 font-serif text-sm">
               <span className="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-full border border-accent/40">
                 <CheckCircle2 className="h-3.5 w-3.5 text-accent" strokeWidth={2.5} />
@@ -388,13 +760,13 @@ const ProposalTab = ({
 
       {/* Add-ons */}
       <Card>
-        <CardHeader eyebrow="Make it hers" title="Bachelorette add-ons" />
+        <CardHeader eyebrow="Make it yours" title={theme.addonsTitle} />
         <p className="mt-2 max-w-xl font-serif text-sm italic text-muted-foreground">
-          Pick what makes the weekend feel like {firstName}. Pricing splits across
-          {" "}{bridesmaids} bridesmaids — final tally updates as you toggle.
+          Pick what makes the {theme.occasion} feel like {firstName}. Pricing splits across
+          {" "}{headcount} {theme.noun.plural} — final tally updates as you toggle.
         </p>
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
-          {ADDON_CATALOG.map((a) => {
+          {theme.addons.map((a) => {
             const on = selected.has(a.id);
             return (
               <button
@@ -428,20 +800,19 @@ const ProposalTab = ({
         )}
       </Card>
 
-      {/* Per-bridesmaid pull */}
+      {/* Per-person pull */}
       <Card accent>
         <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
           <div>
             <p className="font-serif text-[10px] uppercase tracking-[0.3em] text-accent">
               For the group chat
             </p>
-            <h3 className="mt-1 font-serif text-2xl italic">What each bridesmaid pays</h3>
+            <h3 className="mt-1 font-serif text-2xl italic">What each {theme.noun.singular} pays</h3>
           </div>
-          <span className="font-serif text-4xl">${perBridesmaid.toLocaleString()}</span>
+          <span className="font-serif text-4xl">${perPerson.toLocaleString()}</span>
         </div>
         <p className="mt-2 font-serif text-sm italic text-muted-foreground">
-          ${totalEstimate.toLocaleString()} split across {bridesmaids} bridesmaids — the
-          bride&rsquo;s portion covered as a group gift.
+          ${totalEstimate.toLocaleString()} split across {headcount} {theme.noun.plural}.
         </p>
       </Card>
 
@@ -449,8 +820,8 @@ const ProposalTab = ({
       <Card>
         <CardHeader eyebrow="Payment & terms" title="The receipt" />
         <dl className="mt-4 divide-y divide-dashed divide-foreground/15 font-serif text-sm">
-          <Row label="Weekend package" value={`$${subtotal.toLocaleString()}`} />
-          <Row label="Bachelorette add-ons" value={`$${addOnTotal.toLocaleString()}`} />
+          <Row label={`${cap(theme.occasion)} package`} value={`$${subtotal.toLocaleString()}`} />
+          <Row label={theme.addonsTitle} value={`$${addOnTotal.toLocaleString()}`} />
           <Row label={`Deposit ${paid ? "paid" : "due"}`} value={`$${deposit.toLocaleString()}`} />
           <Row label="Remaining balance" value={`$${remaining.toLocaleString()}`} bold />
         </dl>
@@ -470,9 +841,9 @@ const ProposalTab = ({
         </div>
 
         <ul className="mt-5 list-disc space-y-1.5 pl-5 font-serif text-xs italic leading-relaxed text-muted-foreground">
-          <li>The ${deposit} deposit holds the weekend for 72 hours pending final contract.</li>
+          <li>The ${deposit} deposit holds the {theme.occasion} for 72 hours pending final contract.</li>
           <li>Refundable up to 14 days prior; applied to your final invoice at settlement.</li>
-          <li>Final bridesmaid headcount confirmed 7 days before the weekend.</li>
+          <li>Final {theme.noun.singular} headcount confirmed 7 days before the {theme.occasion}.</li>
         </ul>
 
         {paid && (
@@ -485,17 +856,17 @@ const ProposalTab = ({
   );
 };
 
-const StayTab = ({ est, persist }: { est: SavedEstimate; persist: (p: Partial<SavedEstimate>) => void }) => {
+const StayTab = ({ est, persist, theme }: { est: SavedEstimate; persist: (p: Partial<SavedEstimate>) => void; theme: EventTheme }) => {
   const sb = est.stayBlock ?? { enabled: true, rooms: 6, nights: 3, confirmed: 4 };
   return (
     <div className="space-y-6">
       <Card>
         <div className="flex items-start justify-between gap-4">
           <div>
-            <CardHeader eyebrow="The Suites" title="Where everyone sleeps" />
+            <CardHeader eyebrow={theme.tabs.stay} title="Where everyone sleeps" />
             <p className="mt-2 max-w-md font-serif text-sm italic text-muted-foreground">
-              Six suites held for the weekend — the bride&rsquo;s own deluxe king
-              plus five shared bridesmaid suites at the group rate.
+              A block of suites held for your {theme.occasion} at the group rate — adjust the
+              count as RSVPs from your {theme.noun.plural} come in.
             </p>
           </div>
           <label className="flex items-center gap-2 font-serif text-xs italic">
@@ -511,11 +882,11 @@ const StayTab = ({ est, persist }: { est: SavedEstimate; persist: (p: Partial<Sa
       {sb.enabled && (
         <>
           <Card>
-            <CardHeader eyebrow="Allocation" title="Your weekend room block" />
+            <CardHeader eyebrow="Allocation" title="Your room block" />
             <div className="mt-4 grid gap-4 sm:grid-cols-3">
               <Stat label="Suites held" value={String(sb.rooms ?? 0)} />
               <Stat label="Nights" value={String(sb.nights ?? 0)} />
-              <Stat label="Bridesmaids RSVP'd" value={`${sb.confirmed ?? 0} / ${(sb.rooms ?? 0) * 2}`} />
+              <Stat label="Guests RSVP'd" value={`${sb.confirmed ?? 0} / ${(sb.rooms ?? 0) * 2}`} />
             </div>
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
               <NumField label="Suites" value={sb.rooms ?? 0} onChange={(v) => persist({ stayBlock: { ...sb, rooms: v } })} />
@@ -528,11 +899,11 @@ const StayTab = ({ est, persist }: { est: SavedEstimate; persist: (p: Partial<Sa
           </Card>
 
           <Card>
-            <CardHeader eyebrow="Suite types" title="Held at the bridal-party rate" />
+            <CardHeader eyebrow="Suite types" title="Held at the group rate" />
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               {[
-                { name: "Bride's Deluxe King", rate: 580, allocated: 1, note: "Single occupancy — bride's suite" },
-                { name: "Bridesmaid Garden Suite", rate: 450, allocated: Math.max((sb.rooms ?? 0) - 1, 0), note: "Double occupancy — two bridesmaids per suite" },
+                { name: "Deluxe King Suite", rate: 580, allocated: 1, note: "Single occupancy — host suite" },
+                { name: "Garden Double Suite", rate: 450, allocated: Math.max((sb.rooms ?? 0) - 1, 0), note: "Double occupancy — two guests per suite" },
               ].map((r) => (
                 <div key={r.name} className="rounded-md border border-border bg-white p-4">
                   <div className="flex items-start gap-3">
@@ -557,7 +928,7 @@ const StayTab = ({ est, persist }: { est: SavedEstimate; persist: (p: Partial<Sa
   );
 };
 
-const VendorsTab = ({ est, persist }: { est: SavedEstimate; persist: (p: Partial<SavedEstimate>) => void }) => {
+const VendorsTab = ({ est, persist, theme }: { est: SavedEstimate; persist: (p: Partial<SavedEstimate>) => void; theme: EventTheme }) => {
   const [mode, setMode] = useState<"market" | "manage">("market");
   const [cat, setCat] = useState<string>("All");
   const vendors = est.vendors ?? [];
@@ -580,13 +951,13 @@ const VendorsTab = ({ est, persist }: { est: SavedEstimate; persist: (p: Partial
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader eyebrow="Build the bride squad" title="Vendors for the weekend" />
+        <CardHeader eyebrow={theme.tabs.vendors} title="Vendors for your event" />
         <p className="mt-2 max-w-xl font-serif text-sm italic text-muted-foreground">
-          Hand-picked specialists who deliver bachelorette weekends. Add a vendor
+          Hand-picked specialists who deliver social events at Nobu. Add a vendor
           to start the booking, then mark contracted once signed.
         </p>
         <div className="mt-5 flex flex-wrap gap-2">
-          <button onClick={() => setMode("market")} className={tabPill(mode === "market")}>Bride-squad market</button>
+          <button onClick={() => setMode("market")} className={tabPill(mode === "market")}>Vendor market</button>
           <button onClick={() => setMode("manage")} className={tabPill(mode === "manage")}>
             Booked ({vendors.length})
           </button>
@@ -630,13 +1001,13 @@ const VendorsTab = ({ est, persist }: { est: SavedEstimate; persist: (p: Partial
         </>
       ) : (
         <Card>
-          <CardHeader eyebrow="Squad status" title={`${contracted} of ${vendors.length || 1} contracted`} />
+          <CardHeader eyebrow="Vendor status" title={`${contracted} of ${vendors.length || 1} contracted`} />
           <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
             <div className="h-full bg-accent" style={{ width: `${vendors.length ? (contracted / vendors.length) * 100 : 0}%` }} />
           </div>
           {vendors.length === 0 ? (
             <p className="mt-6 font-serif text-sm italic text-muted-foreground">
-              No squad members booked yet — head to the bride-squad market.
+              No vendors booked yet — head to the vendor market.
             </p>
           ) : (
             <ul className="mt-5 divide-y divide-dashed divide-foreground/15">
@@ -669,7 +1040,7 @@ const VendorsTab = ({ est, persist }: { est: SavedEstimate; persist: (p: Partial
   );
 };
 
-const ItineraryTab = ({ est, persist }: { est: SavedEstimate; persist: (p: Partial<SavedEstimate>) => void }) => {
+const ItineraryTab = ({ est, persist, theme }: { est: SavedEstimate; persist: (p: Partial<SavedEstimate>) => void; theme: EventTheme }) => {
   const items = est.itinerary && est.itinerary.length > 0 ? est.itinerary : DEFAULT_ITINERARY;
   const [showActivities, setShowActivities] = useState(false);
   const [draftDay, setDraftDay] = useState<1 | 2 | 3>(2);
@@ -697,7 +1068,7 @@ const ItineraryTab = ({ est, persist }: { est: SavedEstimate; persist: (p: Parti
   // Group itinerary items by day (1 = Friday, 2 = Saturday, 3 = Sunday)
   const DAY_META: Record<1 | 2 | 3, { name: string; label: string }> = {
     1: { name: "Friday", label: "Arrivals & welcome" },
-    2: { name: "Saturday", label: "Spa, sun & celebration" },
+    2: { name: "Saturday", label: "The main event" },
     3: { name: "Sunday", label: "Farewell brunch" },
   };
   const byDay = ([1, 2, 3] as const).map((d) => ({
@@ -709,13 +1080,13 @@ const ItineraryTab = ({ est, persist }: { est: SavedEstimate; persist: (p: Parti
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader eyebrow="The Weekend" title="Three days, every detail dialed" />
+        <CardHeader eyebrow={theme.tabs.itinerary} title="Every detail dialed" />
         <p className="mt-2 max-w-xl font-serif text-sm italic text-muted-foreground">
-          Friday arrivals through Sunday brunch. Drop in bachelorette activities
-          from the catalog to keep the bride-tribe energy up.
+          Arrivals through farewell. Drop in activities from the catalog to keep
+          your {theme.noun.plural} busy between the headline moments.
         </p>
         <button onClick={() => setShowActivities((s) => !s)} className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 font-serif text-xs italic hover:bg-[#FBF6EE]">
-          <Sparkles className="h-3.5 w-3.5 text-accent" /> Browse bachelorette activities
+          <Sparkles className="h-3.5 w-3.5 text-accent" /> Browse activities
         </button>
         {showActivities && (
           <div className="mt-4 grid gap-2 rounded-md border border-dashed border-foreground/15 bg-[#FBF6EE]/60 p-3 sm:grid-cols-2">
@@ -778,7 +1149,7 @@ const ItineraryTab = ({ est, persist }: { est: SavedEstimate; persist: (p: Parti
 
       {/* Composer */}
       <Card>
-        <CardHeader eyebrow="Add a moment" title="Drop in a new bachelorette beat" />
+        <CardHeader eyebrow="Add a moment" title="Drop in a new beat" />
         <div className="mt-4 grid gap-2 rounded-md border border-dashed border-foreground/20 p-3 sm:grid-cols-[110px_90px_1fr_140px_auto]">
           <select
             value={draftDay} onChange={(e) => setDraftDay(Number(e.target.value) as 1 | 2 | 3)}
@@ -810,15 +1181,17 @@ const ItineraryTab = ({ est, persist }: { est: SavedEstimate; persist: (p: Parti
 };
 
 const GuestsTab = ({
-  est, persist, bridesmaids,
+  est, persist, theme, headcount,
 }: {
   est: SavedEstimate;
   persist: (p: Partial<SavedEstimate>) => void;
-  bridesmaids: number;
+  theme: EventTheme;
+  headcount: number;
 }) => {
   const guests = est.guestList ?? [];
   const [filter, setFilter] = useState<"all" | "yes" | "pending">("all");
   const [draftName, setDraftName] = useState("");
+  const noun = theme.noun;
 
   const save = (next: SavedEstimate["guestList"]) => persist({ guestList: next });
 
@@ -849,15 +1222,15 @@ const GuestsTab = ({
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader eyebrow="Bridesmaids" title="The bride tribe" />
+        <CardHeader eyebrow={theme.tabs.guests} title="The guest list" />
         <p className="mt-2 max-w-xl font-serif text-sm italic text-muted-foreground">
           Track who&rsquo;s in, who&rsquo;s still deciding, and who needs the link.
-          Up to {bridesmaids} bridesmaid invites for the weekend.
+          Up to {headcount} {noun.plural} for the {theme.occasion}.
         </p>
       </Card>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Stat label="In for the weekend" value={String(totals.in)} />
+        <Stat label={`In for the ${theme.occasion}`} value={String(totals.in)} />
         <Stat label="Waiting on RSVP" value={String(totals.waiting)} />
         <Stat label="Invite not sent" value={String(totals.notSent)} />
       </div>
@@ -873,24 +1246,24 @@ const GuestsTab = ({
           </div>
           <div className="relative">
             <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-            <input placeholder="Find a bridesmaid…" className="rounded-md border border-border bg-background py-1.5 pl-7 pr-2 font-serif text-xs italic" />
+            <input placeholder={`Find a ${noun.singular}…`} className="rounded-md border border-border bg-background py-1.5 pl-7 pr-2 font-serif text-xs italic" />
           </div>
         </div>
 
         <div className="mt-4 grid gap-2 rounded-md border border-dashed border-foreground/20 p-3 sm:grid-cols-[1fr_auto]">
           <input
             value={draftName} onChange={(e) => setDraftName(e.target.value)}
-            placeholder="Bridesmaid name (or '+1 plus partner')"
+            placeholder={`${cap(noun.singular)} name (or '+1 plus partner')`}
             className="rounded-md border border-border bg-background px-2 py-2 font-serif text-sm"
           />
           <button onClick={add} className="flex items-center justify-center gap-1.5 rounded-md bg-foreground px-4 py-2 font-serif text-[11px] uppercase tracking-[0.22em] text-background hover:bg-foreground/90">
-            <Plus className="h-3.5 w-3.5" /> Add bridesmaid
+            <Plus className="h-3.5 w-3.5" /> Add {noun.singular}
           </button>
         </div>
 
         {filtered.length === 0 ? (
           <p className="mt-6 text-center font-serif text-sm italic text-muted-foreground">
-            No bridesmaids in this filter yet.
+            No {noun.plural} in this filter yet.
           </p>
         ) : (
           <ul className="mt-4 divide-y divide-dashed divide-foreground/15">
@@ -899,7 +1272,7 @@ const GuestsTab = ({
                 <div>
                   <div>{g.name}</div>
                   <div className="font-serif text-xs italic text-muted-foreground">
-                    {g.rsvp === "yes" ? "Locked in for the weekend" : g.invited ? "Invite sent" : "Not invited yet"}
+                    {g.rsvp === "yes" ? `Locked in for the ${theme.occasion}` : g.invited ? "Invite sent" : "Not invited yet"}
                   </div>
                 </div>
                 <button
@@ -931,6 +1304,8 @@ const GuestsTab = ({
 };
 
 /* ----------------- Primitives ----------------- */
+
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 const Card = ({
   children, accent,

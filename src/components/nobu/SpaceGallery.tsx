@@ -333,7 +333,7 @@ export const SpaceGallery = ({
 
   if (detail) {
     return (
-      <div className="rounded-xl border border-border bg-background p-5 md:p-7">
+      <div className="rounded-xl border border-border bg-white p-5 md:p-7">
         <button
           type="button"
           onClick={() => setDetail(null)}
@@ -416,7 +416,7 @@ export const SpaceGallery = ({
   }
 
   return (
-    <div className="rounded-xl border border-border bg-background p-5 md:p-7">
+    <div>
       <p className="eyebrow">Allie's picks</p>
       <h3 className="mt-2 font-serif text-2xl md:text-3xl leading-tight">
         Spaces curated for your celebration
@@ -433,7 +433,7 @@ export const SpaceGallery = ({
           return (
             <article
               key={s.name}
-              className="flex flex-col overflow-hidden rounded-xl border border-border bg-background transition hover:shadow-rcd"
+              className="flex flex-col overflow-hidden rounded-xl border border-border bg-white transition hover:shadow-rcd"
             >
               <SpaceImageGallery
                 images={s.gallery}

@@ -82,7 +82,6 @@ export const Footer = () => (
           <li><a href="#venues" className="hover:text-copper-soft transition-colors">Venues</a></li>
           <li><a href="#stays" className="hover:text-copper-soft transition-colors">Stays</a></li>
           <li><a href="#dining" className="hover:text-copper-soft transition-colors">Dining</a></li>
-          <li><a href="#faq" className="hover:text-copper-soft transition-colors">FAQ</a></li>
         </ul>
       </div>
 

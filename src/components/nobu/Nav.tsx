@@ -41,7 +41,7 @@ export const Nav = ({ onPlan, onSpecialist, onMenu, variant = "overlay" }: NavPr
 
       <div className="container flex items-center justify-between py-5 md:py-6">
         <Link
-          to="/"
+          to="/direct"
           className="flex h-[38px] shrink-0 items-center"
           aria-label="Nobu Hotel Los Cabos"
         >

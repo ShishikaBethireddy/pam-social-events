@@ -19,7 +19,7 @@ type HeroProps = {
  */
 export const Hero = ({ onPlan, onSpecialist }: HeroProps) => {
   return (
-    <section className="relative min-h-[100svh] flex items-center overflow-hidden">
+    <section className="relative min-h-[56svh] flex items-center overflow-hidden">
       <img
         src={heroImg}
         alt="Guests toasting at a candlelit Nobu terrace celebration at golden hour"
@@ -31,7 +31,7 @@ export const Hero = ({ onPlan, onSpecialist }: HeroProps) => {
       <div className="absolute inset-0 bg-gradient-to-r from-ink/75 via-ink/40 to-ink/10" />
       <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
 
-      <div className="container relative z-10 pt-40 pb-28 text-paper">
+      <div className="container relative z-10 pt-32 pb-24 text-paper">
         <div className="max-w-2xl">
           <p className="eyebrow text-copper-soft">Social Events &amp; Celebrations</p>
 

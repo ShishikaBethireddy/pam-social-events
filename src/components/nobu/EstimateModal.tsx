@@ -118,7 +118,7 @@ export const EstimateModal = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="p-0 gap-0 border-border bg-secondary/95 backdrop-blur sm:max-w-md sm:rounded-t-3xl sm:rounded-b-3xl rounded-t-3xl rounded-b-none data-[state=open]:slide-in-from-bottom data-[state=closed]:slide-out-to-bottom"
+        className="p-0 gap-0 border-border bg-white sm:max-w-md sm:rounded-t-3xl sm:rounded-b-3xl rounded-t-3xl rounded-b-none data-[state=open]:slide-in-from-bottom data-[state=closed]:slide-out-to-bottom"
       >
         {view === "contact" ? (
         <div className="px-6 pt-7 pb-6 sm:px-8 sm:pt-8">
@@ -133,7 +133,7 @@ export const EstimateModal = ({
           </p>
 
           {!user && (
-            <div className="mt-5 flex items-center justify-between gap-3 rounded-md border border-border bg-background/60 px-4 py-3 text-sm">
+            <div className="mt-5 flex items-center justify-between gap-3 rounded-md border border-border bg-accent/5 px-4 py-3 text-sm">
               <div className="flex items-center gap-2 text-foreground">
                 <LogIn className="h-4 w-4 text-accent" />
                 <span>Already have an account?</span>
@@ -163,7 +163,7 @@ export const EstimateModal = ({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="First name is fine"
-                className="mt-2 w-full rounded-md border border-border bg-background px-4 py-3 text-base text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
+                className="mt-2 w-full rounded-md border border-border bg-white px-4 py-3 text-base text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
               />
             </div>
 
@@ -176,7 +176,7 @@ export const EstimateModal = ({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Name@email.com"
-                className="mt-2 w-full rounded-md border border-border bg-background px-4 py-3 text-base text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
+                className="mt-2 w-full rounded-md border border-border bg-white px-4 py-3 text-base text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
               />
             </div>
 
@@ -185,7 +185,7 @@ export const EstimateModal = ({
                 Phone number <span className="text-muted-foreground normal-case tracking-normal">*optional</span>
               </label>
               <div className="mt-2 grid grid-cols-[110px_1fr] gap-2">
-                <div className="relative flex items-center rounded-md border border-border bg-background px-3 py-3 text-sm text-foreground">
+                <div className="relative flex items-center rounded-md border border-border bg-white px-3 py-3 text-sm text-foreground">
                   USA +1
                   <ChevronDown className="ml-auto h-4 w-4 text-muted-foreground" />
                 </div>
@@ -194,7 +194,7 @@ export const EstimateModal = ({
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="(555) 000-0000"
-                  className="w-full rounded-md border border-border bg-background px-4 py-3 text-base text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
+                  className="w-full rounded-md border border-border bg-white px-4 py-3 text-base text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
                 />
               </div>
             </div>
@@ -202,7 +202,7 @@ export const EstimateModal = ({
             <button
               type="submit"
               disabled={!name.trim() || !email.trim()}
-              className="mt-2 w-full rounded-full bg-primary py-4 text-base font-medium text-primary-foreground transition hover:bg-primary/90 disabled:opacity-40"
+              className="mt-2 w-full rounded-full bg-accent py-4 text-base font-medium text-accent-foreground transition hover:bg-accent/90 disabled:opacity-40"
             >
               See my estimate
             </button>
@@ -250,7 +250,7 @@ export const EstimateModal = ({
                 value={signInEmail}
                 onChange={(e) => setSignInEmail(e.target.value)}
                 placeholder="Name@email.com"
-                className="mt-2 w-full rounded-md border border-border bg-background px-4 py-3 text-base text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
+                className="mt-2 w-full rounded-md border border-border bg-white px-4 py-3 text-base text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
               />
             </div>
 
@@ -265,7 +265,7 @@ export const EstimateModal = ({
                   minLength={6}
                   value={signInPassword}
                   onChange={(e) => setSignInPassword(e.target.value)}
-                  className="mt-2 w-full rounded-md border border-border bg-background px-4 py-3 text-base text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
+                  className="mt-2 w-full rounded-md border border-border bg-white px-4 py-3 text-base text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
                 />
               </div>
             )}
@@ -277,7 +277,7 @@ export const EstimateModal = ({
             <button
               type="submit"
               disabled={!signInEmail.trim() || (signInMode === "password" && !signInPassword)}
-              className="w-full rounded-full bg-primary py-4 text-base font-medium text-primary-foreground transition hover:bg-primary/90 disabled:opacity-40"
+              className="w-full rounded-full bg-accent py-4 text-base font-medium text-accent-foreground transition hover:bg-accent/90 disabled:opacity-40"
             >
               {signInMode === "magic" ? "Send magic link" : "Sign in & see my estimate"}
             </button>
@@ -288,7 +288,7 @@ export const EstimateModal = ({
                 setSignInMode(signInMode === "magic" ? "password" : "magic");
                 setSignInError(null);
               }}
-              className="flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background py-3 text-sm font-medium text-foreground hover:bg-secondary/60"
+              className="flex w-full items-center justify-center gap-2 rounded-full border border-border bg-white py-3 text-sm font-medium text-foreground hover:bg-secondary/60"
             >
               <Mail className="h-4 w-4" />
               {signInMode === "magic" ? "Use password instead" : "Email me a magic link"}

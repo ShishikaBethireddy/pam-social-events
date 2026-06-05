@@ -46,7 +46,7 @@ const more = [
  * event types" requirement.
  */
 export const EventTypes = () => (
-  <section id="events" className="py-24 md:py-32 bg-canvas">
+  <section id="events" className="py-24 md:py-32 bg-white">
     <div className="container">
       <div className="max-w-3xl">
         <p className="eyebrow">Every Celebration, Curated</p>

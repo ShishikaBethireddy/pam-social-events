@@ -29,6 +29,11 @@ import storyEngagement from "@/assets/event-engagement.jpg";
 import storyBirthday from "@/assets/event-birthday.jpg";
 import storyShower from "@/assets/event-shower.jpg";
 import rightNowBg from "@/assets/venue-rooftop.jpg";
+import venueBallroom from "@/assets/venue-ballroom.jpg";
+import venuePoolside from "@/assets/venue-poolside.jpg";
+import venuePrivateDining from "@/assets/venue-private-dining.jpg";
+import bacheloretteBeach from "@/assets/bachelorette-beach.jpg";
+import fbOmakase from "@/assets/fb-omakase.jpg";
 
 // ── Pre-chat Plan landing — direct counterpart to pam-brides /plan ──
 // Editorial hero with looping video, staggered headline, and a
@@ -60,16 +65,16 @@ type Year = (typeof YEARS)[number];
 // hosts, surfaced as a swipeable strip of icons just below the hero
 // so visitors can browse breadth before they commit.
 const EVENT_CAROUSEL_ITEMS = [
-  { name: "Family Reunions", Icon: Users },
-  { name: "Holiday Gatherings", Icon: TreePine },
-  { name: "Milestone Birthdays", Icon: Cake },
-  { name: "Birthday Weekends", Icon: PartyPopper },
-  { name: "Anniversaries", Icon: Heart },
-  { name: "Engagement Parties", Icon: Gem },
-  { name: "Bachelor Parties", Icon: Wine },
-  { name: "Bachelorette Parties", Icon: Sparkles },
-  { name: "Baby Showers", Icon: Flower2 },
-  { name: "Private Dinners", Icon: UtensilsCrossed },
+  { name: "Family Reunions", Icon: Users, img: heroPoster },
+  { name: "Holiday Gatherings", Icon: TreePine, img: venueBallroom },
+  { name: "Milestone Birthdays", Icon: Cake, img: storyBirthday },
+  { name: "Birthday Weekends", Icon: PartyPopper, img: venuePoolside },
+  { name: "Anniversaries", Icon: Heart, img: venuePrivateDining },
+  { name: "Engagement Parties", Icon: Gem, img: storyEngagement },
+  { name: "Bachelor Parties", Icon: Wine, img: rightNowBg },
+  { name: "Bachelorette Parties", Icon: Sparkles, img: bacheloretteBeach },
+  { name: "Baby Showers", Icon: Flower2, img: storyShower },
+  { name: "Private Dinners", Icon: UtensilsCrossed, img: fbOmakase },
 ] as const;
 
 function EventTypesCarousel() {
@@ -103,15 +108,15 @@ function EventTypesCarousel() {
   };
 
   return (
-    <section className="bg-cream-soft py-12 md:py-16">
+    <section className="bg-ink py-16 text-paper md:py-20">
       <div className="mx-auto w-full max-w-7xl px-6">
         <div className="mb-8 flex flex-col items-start gap-3 md:mb-10 md:flex-row md:items-end md:justify-between">
           <div className="flex flex-col gap-1">
-            <p className="eyebrow">Every occasion</p>
-            <h2 className="font-title text-3xl leading-tight text-ink md:text-4xl">
-              <span>Events</span> <span className="italic">we host here.</span>
+            <p className="eyebrow text-copper-soft">Every occasion</p>
+            <h2 className="font-title text-3xl leading-tight text-paper md:text-4xl">
+              <span>Events</span> <span className="italic text-copper-soft">we host here.</span>
             </h2>
-            <p className="mt-1 max-w-md font-sans text-sm leading-5 text-ink-soft">
+            <p className="mt-1 max-w-md font-sans text-sm leading-5 text-paper/70">
               From intimate dinners to full-resort takeovers — a glimpse of
               what gathers under the Nobu roof.
             </p>
@@ -122,7 +127,7 @@ function EventTypesCarousel() {
               onClick={() => scrollBy(-1)}
               aria-label="Scroll left"
               disabled={!canLeft}
-              className="flex h-10 w-10 items-center justify-center rounded-pill border border-border-default bg-paper text-ink transition-colors hover:border-copper hover:bg-cream hover:text-copper disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border-default disabled:hover:bg-paper disabled:hover:text-ink"
+              className="flex h-10 w-10 items-center justify-center rounded-pill border border-paper/30 bg-white/5 text-paper transition-colors hover:border-paper/60 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-paper/30 disabled:hover:bg-white/5"
             >
               <ChevronLeft className="h-4 w-4" strokeWidth={1.6} />
             </button>
@@ -131,7 +136,7 @@ function EventTypesCarousel() {
               onClick={() => scrollBy(1)}
               aria-label="Scroll right"
               disabled={!canRight}
-              className="flex h-10 w-10 items-center justify-center rounded-pill border border-border-default bg-paper text-ink transition-colors hover:border-copper hover:bg-cream hover:text-copper disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border-default disabled:hover:bg-paper disabled:hover:text-ink"
+              className="flex h-10 w-10 items-center justify-center rounded-pill border border-paper/30 bg-white/5 text-paper transition-colors hover:border-paper/60 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-paper/30 disabled:hover:bg-white/5"
             >
               <ChevronRight className="h-4 w-4" strokeWidth={1.6} />
             </button>
@@ -141,24 +146,35 @@ function EventTypesCarousel() {
         <div className="relative">
           <div
             ref={scrollerRef}
-            className="flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-3 md:gap-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            {EVENT_CAROUSEL_ITEMS.map(({ name, Icon }) => (
-              <div
+            {EVENT_CAROUSEL_ITEMS.map(({ name, Icon, img }) => (
+              <article
                 key={name}
-                className="flex w-[140px] shrink-0 snap-start flex-col items-center gap-3 rounded-md border border-border-subtle bg-paper p-5 transition-all hover:-translate-y-1 hover:border-copper hover:shadow-rcd md:w-[160px]"
+                className="group relative w-[210px] shrink-0 snap-start overflow-hidden rounded-xl transition-all hover:-translate-y-1 md:w-[250px]"
               >
-                <span className="flex h-14 w-14 items-center justify-center rounded-pill bg-cream text-copper">
-                  <Icon className="h-6 w-6" strokeWidth={1.4} />
-                </span>
-                <p className="text-center font-sans text-[13px] font-medium leading-tight text-ink">
-                  {name}
-                </p>
-              </div>
+                <div className="aspect-[3/4] w-full overflow-hidden">
+                  <img
+                    src={img}
+                    alt={name}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 flex items-center gap-2.5 p-4">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-pill bg-paper/15 text-paper backdrop-blur">
+                    <Icon className="h-4 w-4" strokeWidth={1.5} />
+                  </span>
+                  <p className="font-title text-base leading-tight text-paper">
+                    {name}
+                  </p>
+                </div>
+              </article>
             ))}
           </div>
           {/* Fade affordance on right edge so users know there's more */}
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-cream-soft to-transparent md:w-16" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-ink to-transparent md:w-16" />
         </div>
       </div>
     </section>
@@ -190,7 +206,7 @@ const HOW_IT_WORKS_STEPS = [
 
 function HowItWorks({ onSpecialist }: { onSpecialist: () => void }) {
   return (
-    <section className="bg-paper py-12 md:py-16">
+    <section className="bg-white py-16 md:py-20">
       <div className="mx-auto w-full max-w-7xl px-6">
         <div className="mb-8 flex flex-col items-start gap-2 md:mb-12 md:flex-row md:items-end md:justify-between">
           <div className="flex flex-col gap-1">
@@ -213,38 +229,55 @@ function HowItWorks({ onSpecialist }: { onSpecialist: () => void }) {
           </button>
         </div>
 
-        <ol className="grid gap-4 md:grid-cols-3 md:gap-6">
-          {HOW_IT_WORKS_STEPS.map(({ Icon, title, body }, i) => (
-            <li
-              key={title}
-              className="relative flex flex-col gap-4 rounded-md border border-border-subtle bg-cream-soft p-6 md:p-7"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-title text-5xl italic leading-none text-copper md:text-6xl">
+        <div className="grid items-stretch gap-6 md:grid-cols-2 md:gap-12">
+          {/* Editorial image */}
+          <div className="relative overflow-hidden rounded-xl">
+            <div className="aspect-[4/5] w-full md:h-full">
+              <img
+                src={heroPoster}
+                alt="A Nobu social celebration in full swing"
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
+              <p className="font-title text-2xl italic leading-tight text-paper md:text-3xl">
+                From first toast to last dance.
+              </p>
+              <p className="mt-1 font-sans text-sm text-paper/85">
+                One concierge, start to finish.
+              </p>
+            </div>
+          </div>
+
+          {/* Steps */}
+          <ol className="flex flex-col gap-4">
+            {HOW_IT_WORKS_STEPS.map(({ Icon, title, body }, i) => (
+              <li
+                key={title}
+                className="flex gap-4 rounded-xl border border-border-subtle bg-cream-soft p-5 md:p-6"
+              >
+                <span className="font-title text-4xl italic leading-none text-copper md:text-5xl">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="flex h-12 w-12 items-center justify-center rounded-pill bg-paper text-copper shadow-sm">
-                  <Icon className="h-5 w-5" strokeWidth={1.5} />
-                </span>
-              </div>
-              <div className="flex flex-col gap-2">
-                <h3 className="font-title text-xl leading-snug text-ink md:text-[22px]">
-                  {title}
-                </h3>
-                <p className="font-sans text-sm leading-6 text-ink-soft">
-                  {body}
-                </p>
-              </div>
-              {i < HOW_IT_WORKS_STEPS.length - 1 && (
-                <ChevronRight
-                  className="pointer-events-none absolute -right-3 top-1/2 hidden h-5 w-5 -translate-y-1/2 text-copper md:block"
-                  strokeWidth={1.6}
-                  aria-hidden
-                />
-              )}
-            </li>
-          ))}
-        </ol>
+                <div className="flex flex-1 flex-col gap-1.5">
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-pill bg-paper text-copper shadow-sm">
+                      <Icon className="h-4 w-4" strokeWidth={1.5} />
+                    </span>
+                    <h3 className="font-title text-lg leading-snug text-ink md:text-xl">
+                      {title}
+                    </h3>
+                  </div>
+                  <p className="font-sans text-sm leading-6 text-ink-soft">
+                    {body}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
 
         <div className="mt-6 flex md:hidden">
           <button
@@ -594,78 +627,80 @@ const Plan = () => {
       {/* ── How it works — easy as 1, 2, 3 ── */}
       <HowItWorks onSpecialist={() => setSpecialistOpen(true)} />
 
-      {/* ── Real moments — diverse social events ── */}
-      <section className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-12 md:py-16">
-        <div className="flex flex-col items-start gap-2 md:flex-row md:items-end md:justify-between">
-          <div className="flex flex-col gap-1">
-            <p className="eyebrow">Real Moments</p>
-            <h2 className="font-title text-3xl leading-tight text-ink md:text-4xl">
-              <span>Real groups,</span>{" "}
-              <span className="italic">really gathered.</span>
-            </h2>
-          </div>
-          <button
-            type="button"
-            className="inline-flex items-center gap-1.5 font-sans text-sm font-medium text-copper hover:text-copper-hover transition-colors"
-          >
-            See all
-            <ArrowRight className="h-4 w-4" />
-          </button>
-        </div>
-
-        {/* Lead testimonial */}
-        <div className="flex flex-col overflow-hidden bg-paper md:flex-row md:rounded-md md:border md:border-border-default">
-          <div className="relative h-[320px] shrink-0 md:h-auto md:min-h-[440px] md:w-1/2">
-            <img
-              src={storyEngagement}
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          </div>
-          <div className="flex flex-col justify-center gap-3 px-6 py-8 md:w-1/2 md:px-12 md:py-16">
-            <p className="eyebrow">Featured</p>
-            <p className="font-title text-2xl italic text-ink md:text-3xl leading-[1.3]">
-              &ldquo;Twelve years between us and they still built a weekend
-              that felt like home — space for the chaos of four generations
-              and quiet corners for the small reunions.&rdquo;
-            </p>
-            <div className="mt-2 flex items-center gap-2">
-              <span className="h-px w-8 bg-copper" />
-              <p className="font-sans text-sm text-ink-soft">
-                Adaeze Reyes · Reyes Family Reunion · Jul 2024
-              </p>
+      {/* ── Real moments — diverse social events (black template) ── */}
+      <section className="bg-ink py-16 text-paper md:py-20">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6">
+          <div className="flex flex-col items-start gap-2 md:flex-row md:items-end md:justify-between">
+            <div className="flex flex-col gap-1">
+              <p className="eyebrow text-copper-soft">Real Moments</p>
+              <h2 className="font-title text-3xl leading-tight text-paper md:text-4xl">
+                <span>Real groups,</span>{" "}
+                <span className="italic text-copper-soft">really gathered.</span>
+              </h2>
             </div>
-          </div>
-        </div>
-
-        {/* Story cards */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
-          {EVENT_STORIES.map((s) => (
             <button
-              key={s.name}
               type="button"
-              className="flex flex-col overflow-hidden rounded-md border border-border-subtle bg-paper text-left transition-transform hover:-translate-y-1 hover:shadow-rcd"
+              className="inline-flex items-center gap-1.5 font-sans text-sm font-medium text-copper-soft hover:text-paper transition-colors"
             >
-              <div className="relative h-[220px] w-full overflow-hidden md:h-[260px]">
-                <img
-                  src={s.img}
-                  alt={s.name}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-              <div className="flex flex-col gap-3 p-5">
-                <div className="flex flex-col gap-0.5">
-                  <p className="font-title text-base text-ink">{s.name}</p>
-                  <p className="font-sans text-[11px] uppercase tracking-[0.18em] text-ink-muted">
-                    {s.date}
-                  </p>
-                </div>
-                <p className="font-sans text-[13px] leading-5 text-ink-soft">
-                  {s.quote}
+              See all
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+
+          {/* Lead testimonial */}
+          <div className="flex flex-col overflow-hidden rounded-md bg-white/5 md:flex-row">
+            <div className="relative h-[320px] shrink-0 md:h-auto md:min-h-[440px] md:w-1/2">
+              <img
+                src={storyEngagement}
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            </div>
+            <div className="flex flex-col justify-center gap-3 px-6 py-8 md:w-1/2 md:px-12 md:py-16">
+              <p className="eyebrow text-copper-soft">Featured</p>
+              <p className="font-title text-2xl italic text-paper md:text-3xl leading-[1.3]">
+                &ldquo;Twelve years between us and they still built a weekend
+                that felt like home — space for the chaos of four generations
+                and quiet corners for the small reunions.&rdquo;
+              </p>
+              <div className="mt-2 flex items-center gap-2">
+                <span className="h-px w-8 bg-copper-soft" />
+                <p className="font-sans text-sm text-paper/70">
+                  Adaeze Reyes · Reyes Family Reunion · Jul 2024
                 </p>
               </div>
-            </button>
-          ))}
+            </div>
+          </div>
+
+          {/* Story cards */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
+            {EVENT_STORIES.map((s) => (
+              <button
+                key={s.name}
+                type="button"
+                className="flex flex-col overflow-hidden rounded-md bg-white/5 text-left transition-all hover:-translate-y-1 hover:bg-white/[0.07]"
+              >
+                <div className="relative h-[220px] w-full overflow-hidden md:h-[260px]">
+                  <img
+                    src={s.img}
+                    alt={s.name}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="flex flex-col gap-3 p-5">
+                  <div className="flex flex-col gap-0.5">
+                    <p className="font-title text-base text-paper">{s.name}</p>
+                    <p className="font-sans text-[11px] uppercase tracking-[0.18em] text-paper/55">
+                      {s.date}
+                    </p>
+                  </div>
+                  <p className="font-sans text-[13px] leading-5 text-paper/70">
+                    {s.quote}
+                  </p>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -740,7 +775,7 @@ const Plan = () => {
               Plan my event <ArrowRight className="h-3.5 w-3.5" />
             </button>
             <Link
-              to="/"
+              to="/direct"
               className="inline-flex h-11 items-center justify-center rounded-pill border border-ink/30 bg-transparent px-6 font-sans text-xs font-semibold uppercase tracking-[0.22em] text-ink hover:bg-cream transition-colors"
             >
               Back to Nobu

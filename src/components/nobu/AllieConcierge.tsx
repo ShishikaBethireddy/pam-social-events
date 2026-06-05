@@ -53,52 +53,54 @@ const benefits = [
  * product and gives a third primary CTA above the fold.
  */
 export const AllieConcierge = ({ onPlan }: AllieConciergeProps) => (
-  <section className="bg-ink text-paper py-24 md:py-32">
+  <section className="bg-white text-ink py-16 md:py-20">
     <div className="container">
       <div className="max-w-3xl">
         <div className="flex items-center gap-2.5">
           <span className="flex h-6 w-6 items-center justify-center rounded-pill bg-copper">
             <Gem className="h-3 w-3 text-paper" />
           </span>
-          <p className="text-[11px] uppercase font-semibold tracking-[0.28em] text-copper-soft font-sans">
+          <p className="text-[11px] uppercase font-semibold tracking-[0.28em] text-copper font-sans">
             Powered by Allie · AI Event Concierge
           </p>
         </div>
 
-        <h2 className="mt-5 font-title text-4xl md:text-5xl leading-tight">
-          The all-in-one planning suite for your next<br />
-          <em className="italic text-copper-soft">private celebration</em> at Nobu.
+        <h2 className="mt-4 font-title text-3xl md:text-4xl leading-tight text-ink">
+          The all-in-one planning suite for your next{" "}
+          <em className="italic text-copper">private celebration</em> at Nobu.
         </h2>
 
-        <p className="mt-5 max-w-2xl font-sans text-base md:text-lg text-paper/75 leading-relaxed">
+        <p className="mt-3 max-w-2xl font-sans text-sm md:text-base text-ink/70 leading-relaxed">
           You know the feeling you want — not which space, weekend, or price tag.
           Allie shapes the brief with you and your party in about four minutes, then
           hands a fully-briefed specialist the keys.
         </p>
       </div>
 
-      <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {benefits.map(({ Icon, title, body }) => (
           <div
             key={title}
-            className="flex flex-col gap-4 rounded-lg border border-paper/10 bg-paper/[0.04] p-6 md:p-7 transition-colors hover:border-copper/40"
+            className="flex items-start gap-3 rounded-lg border border-border-subtle bg-cream-soft p-4 transition-colors hover:border-copper/40"
           >
             <span
-              className="inline-flex h-10 w-10 items-center justify-center rounded-pill bg-copper/15 text-copper-soft"
-              style={{ border: "1px solid rgba(180,129,77,0.4)" }}
+              className="inline-flex h-9 w-9 flex-none items-center justify-center rounded-pill bg-copper/15 text-copper"
+              style={{ border: "1px solid rgba(123,75,148,0.4)" }}
             >
-              <Icon className="h-5 w-5" strokeWidth={1.5} />
+              <Icon className="h-4 w-4" strokeWidth={1.5} />
             </span>
-            <h3 className="font-title italic text-[22px] leading-snug text-paper">{title}</h3>
-            <p className="font-sans text-sm text-paper/70 leading-relaxed">{body}</p>
+            <div className="min-w-0">
+              <h3 className="font-title italic text-lg leading-snug text-ink">{title}</h3>
+              <p className="mt-0.5 font-sans text-[13px] text-ink/65 leading-relaxed">{body}</p>
+            </div>
           </div>
         ))}
       </div>
 
-      <div className="mt-12 pt-8 border-t border-paper/10 flex flex-col md:flex-row items-start md:items-center gap-5 md:gap-8">
+      <div className="mt-8 pt-6 border-t border-border-subtle flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
         <div className="flex-1">
-          <p className="font-title italic text-[22px] leading-snug">Ready when you are.</p>
-          <p className="mt-1 font-sans text-sm text-paper/70 leading-relaxed">
+          <p className="font-title italic text-lg leading-snug text-ink">Ready when you are.</p>
+          <p className="mt-0.5 font-sans text-[13px] text-ink/65 leading-relaxed">
             About 4 minutes. Refundable date hold at the end. No commitment.
           </p>
         </div>

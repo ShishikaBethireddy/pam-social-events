@@ -24,8 +24,8 @@
        wrapper resolves correctly. Hex source of truth is in
        rcd-tokens.css (`--color-*`). */
 
-    /* Surface: canvas (warm cream) + ink (charcoal) */
-    --background: 36 52% 93%;       /* canvas #F5EFE6 */
+    /* Surface: canvas (soft lavender) + ink (charcoal) */
+    --background: 265 40% 96%;      /* canvas #F4F1F9 */
     --foreground: 60 2% 16%;        /* ink #2A2A28 */
 
     --card: 0 0% 100%;              /* paper */
@@ -38,20 +38,21 @@
     --primary: 60 2% 16%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary = cream (soft surfaces, tags) */
-    --secondary: 33 36% 86%;        /* cream #E8DDD0 */
+    /* Secondary = cream lavender (soft surfaces, tags) */
+    --secondary: 265 42% 89%;       /* cream #E2D8F0 */
     --secondary-foreground: 60 2% 16%;
 
-    /* Muted = canvas-soft / cream-soft */
-    --muted: 36 43% 90%;            /* cream-soft #F0E8DC */
+    /* Muted = cream-soft lavender */
+    --muted: 265 45% 94%;           /* cream-soft #EDE7F6 */
     --muted-foreground: 39 9% 54%;  /* ink-muted #948D80 */
 
-    /* Accent = copper (the brand voice for moments, ribbons, eyebrows) */
-    --accent: 30 40% 50%;           /* copper #B4814D */
+    /* Accent = Cabo-sunset purple (the brand voice for moments, ribbons,
+       eyebrows) — remapped off the legacy copper/mustard. */
+    --accent: 279 33% 44%;          /* sunset #7B4B94 */
     --accent-foreground: 0 0% 100%;
 
-    /* Gold alias kept for back-compat — points at copper-soft */
-    --gold: 33 47% 83%;
+    /* Gold alias kept for back-compat — now points at sunset-soft */
+    --gold: 275 37% 77%;
     --gold-foreground: 60 2% 16%;
 
     --destructive: 0 65% 45%;
@@ -67,14 +68,14 @@
     --radius: 0.75rem;
 
     /* Sidebar — left at neutral defaults, ink/canvas-leaning */
-    --sidebar-background: 36 52% 93%;
+    --sidebar-background: 265 40% 96%;
     --sidebar-foreground: 60 2% 16%;
     --sidebar-primary: 60 2% 16%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 33 36% 86%;
+    --sidebar-accent: 265 42% 89%;
     --sidebar-accent-foreground: 60 2% 16%;
     --sidebar-border: 36 22% 87%;
-    --sidebar-ring: 30 40% 50%;
+    --sidebar-ring: 279 33% 44%;
   }
 
   .dark {
@@ -98,8 +99,8 @@
     --muted: 60 2% 18%;
     --muted-foreground: 39 9% 70%;
 
-    --accent: 30 40% 55%;
-    --accent-foreground: 60 2% 10%;
+    --accent: 279 33% 55%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 60% 40%;
     --destructive-foreground: 36 52% 93%;
@@ -115,7 +116,7 @@
     --sidebar-accent: 60 2% 20%;
     --sidebar-accent-foreground: 36 52% 93%;
     --sidebar-border: 60 2% 25%;
-    --sidebar-ring: 30 40% 55%;
+    --sidebar-ring: 279 33% 55%;
   }
 }
 
@@ -169,4 +170,109 @@
      for inline use (e.g. style={{ color: 'var(--color-copper)' }}). */
   .font-title       { font-family: var(--font-title); }
   .font-title-plain { font-family: var(--font-title-plain); }
+
+  /* Horizontal scroller that hides its scrollbar — used across the
+     agent portal tables, filter rows and mobile carousels. */
+  .scroll-x {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scroll-x::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ============================================================
+   PAM Partner Portal (Travel-Agent prototype)
+   ------------------------------------------------------------
+   Ported from the pam-brides agent flow and re-themed to the
+   Social Events purple/ink palette. These tokens back the
+   `surface-* / text-* / action-*` Tailwind colors and the
+   Figma type-scale helper classes (.text-eyebrow, .text-body-base,
+   .text-heading-xl, …) consumed by src/components/agent/*.
+   ============================================================ */
+:root {
+  /* Surfaces */
+  --color-surface-page: #f6f5f8;
+  --color-surface-default: #ffffff;
+  --color-surface-subtle: #f3f1f7;
+  --color-surface-brand: #ede7f6;        /* lavender wash */
+  --color-surface-feature: #2a2533;      /* dark plum — team/BDM cards */
+  --color-surface-inverse: #15121c;      /* near-black plum — top bar */
+  --color-surface-tinted: #c8aeda;       /* light purple micro-strip */
+  --color-surface-overlay: #3a3543;
+  --color-surface-editorial: #ede7f6;
+
+  /* Text */
+  --color-text-primary: #1a1721;
+  --color-text-secondary: #585563;
+  --color-text-tertiary: #969199;
+  --color-text-inverse: #ffffff;
+  --color-text-inverse-secondary: #d2cfd8;
+  --color-text-brand: #7b4b94;           /* Social Events purple */
+  --color-text-disabled: #b4b1ba;
+
+  /* Actions */
+  --color-action-primary: #1a1721;
+  --color-action-primary-hover: #000000;
+  --color-action-primary-text: #ffffff;
+  --color-action-secondary: #f3f1f7;
+
+  /* Borders (default/subtle/strong live in rcd-tokens.css) */
+  --color-border-muted: #e7e2f0;
+  --color-border-brand: #b9a9cc;
+}
+
+/* ── Figma type-scale helpers (Poppins UI scale) ── */
+.text-eyebrow {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+.text-caption {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 16px;
+  letter-spacing: 4px;
+}
+.text-body-base {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+}
+.text-body-base-medium {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+}
+.text-body-sm-medium {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+}
+.text-label-xs {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+}
+.text-heading-xl {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 28px;
+}
+.text-detail-sm {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 8px;
+  line-height: 12px;
+  letter-spacing: 1px;
 }

@@ -3,9 +3,15 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import Gateway from "./pages/Gateway.tsx";
 import Landing from "./pages/Landing.tsx";
-import TravelAgent from "./pages/TravelAgent.tsx";
-import TravelAgentIntake from "./pages/TravelAgentIntake.tsx";
+import AgentDashboard from "./components/agent/AgentDashboard.tsx";
+import ClientsList from "./components/agent/ClientsList.tsx";
+import RequestsInbox from "./components/agent/RequestsInbox.tsx";
+import CheckAvailability from "./components/agent/CheckAvailability.tsx";
+import NewClientSetup from "./components/agent/NewClientSetup.tsx";
+import AgentClientDetail from "./pages/AgentClientDetail.tsx";
+import AgentClientVendors from "./pages/AgentClientVendors.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import Plan from "./pages/Plan.tsx";
 import Chat from "./pages/Chat.tsx";
@@ -27,14 +33,23 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          {/* `/` is the Social Events marketing landing — the spinoff
-              of the pam-brides marketing flow, retargeted at private
-              celebrations. `/direct` is kept as an alias for guests
-              deep-linking from the old persona-picker. */}
-          <Route path="/" element={<Landing />} />
+          {/* `/` is the Gateway — the very first persona picker that asks
+              how the visitor wants to book (Direct vs. Travel Agent).
+              `/direct` is the guest-facing marketing landing (the current
+              prototype) that Direct Booking hands off to. */}
+          <Route path="/" element={<Gateway />} />
           <Route path="/direct" element={<Landing />} />
-          <Route path="/travel-agent" element={<TravelAgent />} />
-          <Route path="/travel-agent/:id" element={<TravelAgentIntake />} />
+          {/* Travel-Agent Booking → the PAM Partner Portal (agent prototype).
+              `/travel-agent` is the advisor dashboard; the rest of the tree is
+              the clients book, client detail (with tabs), vendor marketplace,
+              requests inbox, Ask-Allie availability, and new-client setup. */}
+          <Route path="/travel-agent" element={<AgentDashboard />} />
+          <Route path="/travel-agent/clients" element={<ClientsList />} />
+          <Route path="/travel-agent/clients/:slug" element={<AgentClientDetail />} />
+          <Route path="/travel-agent/clients/:slug/vendors" element={<AgentClientVendors />} />
+          <Route path="/travel-agent/requests" element={<RequestsInbox />} />
+          <Route path="/travel-agent/check-availability" element={<CheckAvailability />} />
+          <Route path="/travel-agent/new-client" element={<NewClientSetup />} />
           {/* `/plan` is the pre-chat editorial landing (video hero +
               event-type + date pickers + trending venues). `/chat` is the
               Allie concierge — Plan funnels into Chat once a celebration

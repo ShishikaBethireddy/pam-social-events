@@ -22,7 +22,7 @@ const stayTypes = [
  * categories, suite options, group booking, VIP and room block.
  */
 export const Stays = () => (
-  <section id="stays" className="py-24 md:py-32 bg-canvas">
+  <section id="stays" className="py-24 md:py-32 bg-white">
     <div className="container grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
       <div className="order-2 lg:order-1">
         <p className="eyebrow">Stay &amp; Celebrate</p>
@@ -48,7 +48,7 @@ export const Stays = () => (
 
         <div className="mt-10 grid sm:grid-cols-3 gap-3">
           {stayTypes.map((s) => (
-            <div key={s.label} className="rounded-md border border-border-subtle bg-paper p-4">
+            <div key={s.label} className="rounded-md border border-border-subtle bg-cream-soft p-4">
               <p className="font-sans font-semibold text-sm text-ink">{s.label}</p>
               <p className="mt-1 font-sans text-xs text-ink-soft leading-relaxed">{s.desc}</p>
             </div>

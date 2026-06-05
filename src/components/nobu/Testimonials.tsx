@@ -27,7 +27,7 @@ const quotes = [
  * stories" trust-building requirement.
  */
 export const Testimonials = () => (
-  <section className="py-24 md:py-32 bg-cream-soft">
+  <section className="py-24 md:py-32 bg-white">
     <div className="container">
       <div className="max-w-2xl">
         <p className="eyebrow">Guest Stories</p>

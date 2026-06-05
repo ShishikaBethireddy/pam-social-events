@@ -7,9 +7,7 @@ import { Venues } from "@/components/nobu/Venues";
 import { Stays } from "@/components/nobu/Stays";
 import { Dining } from "@/components/nobu/Dining";
 import { AllieConcierge } from "@/components/nobu/AllieConcierge";
-import { Testimonials } from "@/components/nobu/Testimonials";
-import { FAQ } from "@/components/nobu/FAQ";
-import { ClosingCTA, Footer } from "@/components/nobu/ClosingCTA";
+import { Footer } from "@/components/nobu/ClosingCTA";
 import { SpecialistSheet } from "@/components/nobu/SpecialistSheet";
 import { MenuOverlay } from "@/components/nobu/MenuOverlay";
 
@@ -21,9 +19,10 @@ import { MenuOverlay } from "@/components/nobu/MenuOverlay";
  * engagement parties, baby showers, bachelor / bachelorette weekends,
  * family reunions, graduations, private dinners and more.
  *
- * Every primary CTA hands off to `/plan` — the conversational concierge
- * (Allie) that captures the brief, builds an estimate, and ends in a
- * refundable deposit hold.
+ * Every primary CTA hands off to `/plan` — the editorial pre-chat page
+ * (hero + event-type + date pickers) which then routes into `/chat`, the
+ * conversational concierge (Allie) that captures the brief, builds an
+ * estimate, and ends in a refundable deposit hold.
  */
 const Landing = () => {
   const navigate = useNavigate();
@@ -48,9 +47,6 @@ const Landing = () => {
         <Stays />
         <Dining />
         <AllieConcierge onPlan={openPlanner} />
-        <Testimonials />
-        <FAQ />
-        <ClosingCTA onPlan={openPlanner} onSpecialist={openSpecialist} />
       </main>
 
       <Footer />

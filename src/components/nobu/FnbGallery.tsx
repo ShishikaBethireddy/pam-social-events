@@ -109,7 +109,7 @@ export function FnbGallery({ onSelect }: { onSelect: (label: string) => void }) 
   const [expanded, setExpanded] = useState<string | null>(null);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-[#FBF8F2] p-0 shadow-rcd-sm">
+    <div className="overflow-hidden rounded-xl border border-border bg-white p-0 shadow-rcd-sm">
       {/* ── Menu header — printed-card feel ── */}
       <div className="relative border-b border-double border-border px-6 pt-6 pb-5 text-center md:px-10 md:pt-8 md:pb-6">
         <p className="font-serif text-[11px] uppercase tracking-[0.45em] text-muted-foreground">
@@ -122,7 +122,7 @@ export function FnbGallery({ onSelect }: { onSelect: (label: string) => void }) 
           Six culinary directions, each anchored to a Nobu Los Cabos
           restaurant. Tap a course for the chef&rsquo;s note.
         </p>
-        <p className="mt-3 font-serif text-[10px] uppercase tracking-[0.4em] text-accent">
+        <p className="mt-3 font-serif text-[10px] font-semibold uppercase tracking-[0.35em] text-sunset-dawn">
           {styles.length} courses · select one
         </p>
       </div>
@@ -167,7 +167,7 @@ export function FnbGallery({ onSelect }: { onSelect: (label: string) => void }) 
                     </span>
                   </span>
                   <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                    <span className="font-serif text-[11px] italic uppercase tracking-[0.22em] text-accent">
+                    <span className="font-serif text-[11px] font-semibold uppercase tracking-[0.16em] text-sunset-dawn">
                       {s.cuisine}
                     </span>
                     <span className="text-muted-foreground/40">·</span>

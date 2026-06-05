@@ -95,7 +95,7 @@ export const DateCalendar = ({
   };
 
   return (
-    <div className="rounded-sm border border-border bg-background p-5 md:p-6">
+    <div className="rounded-sm border border-border bg-white p-5 md:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="font-serif text-lg md:text-xl">When would you like to celebrate?</p>
         <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
@@ -126,7 +126,7 @@ export const DateCalendar = ({
             className={`rounded-full border px-4 py-1.5 text-xs transition ${
               season === s
                 ? "border-primary bg-primary text-primary-foreground"
-                : "border-border bg-background text-foreground hover:border-accent"
+                : "border-border bg-white text-foreground hover:border-accent"
             }`}
           >
             {s}

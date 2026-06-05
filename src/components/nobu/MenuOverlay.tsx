@@ -16,7 +16,6 @@ const sections = [
   { label: "Venues", href: "#venues" },
   { label: "Stays", href: "#stays" },
   { label: "Dining", href: "#dining" },
-  { label: "Frequently asked", href: "#faq" },
 ];
 
 /**
@@ -50,7 +49,7 @@ export const MenuOverlay = ({ open, onClose, onPlan, onSpecialist }: MenuOverlay
       <div className="bg-ink">
         <div className="container flex items-center justify-between py-5">
           <Link
-            to="/"
+            to="/direct"
             onClick={onClose}
             className="flex h-[32px] items-center"
             aria-label="Nobu Hotel Los Cabos"

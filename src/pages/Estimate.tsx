@@ -268,7 +268,7 @@ function BacheloretteEstimate({
       </section>
 
       {/* ── At-a-glance day strip ─────────────────────────────── */}
-      <section className="border-y border-dashed border-foreground/15 bg-[#F3EBDC]/60">
+      <section className="border-y border-dashed border-foreground/15 bg-white">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-6 py-4 sm:px-10">
           {dayChips.map((d, i) => (
             <div key={d.day} className="flex flex-1 items-center gap-3">
@@ -607,7 +607,7 @@ function GenericEstimate({
   ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-white text-foreground">
       <Nav onPlan={() => navigate("/plan")} />
 
       <section className="relative h-[280px] w-full overflow-hidden sm:h-[360px]">

@@ -363,14 +363,14 @@ const Chat = () => {
       <div className="flex h-14 items-center justify-between px-4 md:h-[60px] md:px-6 border-b border-border-subtle/20">
         <div className="flex items-center gap-3">
           <Link
-            to="/"
+            to="/direct"
             aria-label="Back to home"
             className="flex h-9 w-9 items-center justify-center rounded-pill border border-paper/25 text-paper hover:bg-paper/10 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <Link
-            to="/"
+            to="/direct"
             className="flex h-[32px] items-center"
             aria-label="Nobu Hotel Los Cabos"
           >
@@ -387,7 +387,7 @@ const Chat = () => {
             <span>{progress}%</span>
             <div className="h-1 w-32 overflow-hidden rounded-full bg-paper/15">
               <div
-                className="h-full bg-copper transition-all duration-500"
+                className="h-full bg-paper transition-all duration-500"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -400,7 +400,7 @@ const Chat = () => {
             <UserIcon className="h-5 w-5" strokeWidth={1.5} />
           </Link>
           <Link
-            to="/"
+            to="/direct"
             className="flex h-9 w-9 items-center justify-center text-paper hover:text-copper-soft transition-colors"
             aria-label="Open menu"
           >
@@ -425,7 +425,7 @@ const Chat = () => {
               <button
                 key={c}
                 onClick={() => handleAnswer(c)}
-                className="inline-flex items-center rounded-pill border border-border-default bg-paper px-4 py-2 font-sans text-sm text-ink transition-colors hover:border-copper hover:bg-copper hover:text-paper"
+                className="inline-flex items-center rounded-pill border border-neutral-300 bg-white px-4 py-2 font-sans text-sm text-ink transition-colors hover:border-neutral-400 hover:bg-neutral-50"
               >
                 {c}
               </button>
@@ -482,16 +482,16 @@ const Chat = () => {
   })();
 
   const conversation = (
-    <div className="flex h-full min-h-0 flex-col bg-canvas">
+    <div className="flex h-full min-h-0 flex-col bg-neutral-100">
       {/* Allie pill — sticky meta strip above the thread */}
       <div className="shrink-0 border-b border-border-subtle bg-paper/95 backdrop-blur">
         <div className="mx-auto flex w-full max-w-3xl items-center gap-3 px-4 py-3 md:px-8">
-          <div className="flex h-9 w-9 items-center justify-center rounded-pill bg-ink text-copper-soft">
+          <div className="flex h-9 w-9 items-center justify-center rounded-pill bg-neutral-700 text-white">
             <CalendarHeart className="h-4 w-4" strokeWidth={1.6} />
           </div>
           <div className="leading-tight">
             <div className="font-sans text-sm font-semibold text-ink">Allie</div>
-            <div className="text-[10px] font-sans uppercase tracking-[0.25em] text-copper">
+            <div className="text-[10px] font-sans uppercase tracking-[0.25em] text-neutral-400">
               Nobu · Events Concierge
             </div>
           </div>
@@ -531,7 +531,7 @@ const Chat = () => {
 
       {/* Always-on free-text composer pinned to the foot of the thread */}
       {!confirmed && (
-        <div className="z-10 shrink-0 border-t border-border-subtle bg-canvas/95 px-4 py-4 backdrop-blur md:px-8">
+        <div className="z-10 shrink-0 border-t border-border-subtle bg-neutral-100/95 px-4 py-4 backdrop-blur md:px-8">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -612,11 +612,11 @@ function Bubble({
         data-chat-role="allie"
         className="flex w-full items-start gap-3 animate-bubble-in"
       >
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-pill bg-ink text-copper-soft shadow-rcd-sm">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-pill bg-neutral-700 text-white shadow-rcd-sm">
           <CalendarHeart className="h-[18px] w-[18px]" strokeWidth={1.5} />
         </div>
         <div className="min-w-0 flex-1">
-          <div className="inline-block max-w-[88%] rounded-tr-xl rounded-br-xl rounded-bl-xl bg-paper px-5 py-4 font-sans text-[16px] leading-6 text-ink shadow-rcd-sm">
+          <div className="inline-block max-w-[88%] rounded-tr-xl rounded-br-xl rounded-bl-xl bg-neutral-200 px-5 py-4 font-sans text-[16px] leading-6 text-ink">
             {children}
           </div>
         </div>
@@ -666,7 +666,7 @@ function ProposalSummary({
       </dl>
       <button
         onClick={onHold}
-        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-pill bg-copper px-5 py-3 font-sans text-xs font-semibold uppercase tracking-[0.22em] text-paper transition-colors hover:bg-copper-hover"
+        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-pill bg-ink px-5 py-3 font-sans text-xs font-semibold uppercase tracking-[0.22em] text-paper transition-colors hover:bg-ink-soft"
       >
         Hold the Date · Refundable Deposit
         <ArrowRight className="h-3.5 w-3.5" />
@@ -684,7 +684,7 @@ function Confirmed({ booking }: { booking: Booking }) {
       data-chat-role="allie"
       className="rounded-xl border border-border-default bg-paper p-8 text-center shadow-rcd-sm"
     >
-      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-pill bg-copper">
+      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-pill bg-ink">
         <Check className="h-7 w-7 text-paper" strokeWidth={2.5} />
       </div>
       <p className="eyebrow mt-6">Payment Confirmed</p>
@@ -720,7 +720,7 @@ function Confirmed({ booking }: { booking: Booking }) {
         </dl>
       </div>
       <Link
-        to="/"
+        to="/direct"
         className="mt-8 inline-flex items-center gap-2 rounded-pill bg-ink px-6 py-3 font-sans text-xs font-semibold uppercase tracking-[0.22em] text-paper transition-colors hover:bg-ink-soft"
       >
         Back to Nobu
@@ -1067,7 +1067,7 @@ function GuestsPicker({
   return (
     <div className="flex flex-col gap-2">
       {isPersonalized && (
-        <div className="rounded-xl border border-copper/30 bg-copper/[0.06] px-4 py-3">
+        <div className="rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-3">
           <p className="font-sans text-xs leading-5 text-ink-soft">
             A typical {profile.label} at Nobu runs around{" "}
             <span className="font-semibold text-ink">
@@ -1077,27 +1077,27 @@ function GuestsPicker({
           </p>
         </div>
       )}
-      {profile.tiers.map((tier) => (
-        <button
-          key={tier.id}
-          type="button"
-          onClick={() => onConfirm(tier.range)}
-          className={`group flex items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left transition-colors ${
-            tier.isTypical
-              ? "border-copper bg-cream-soft hover:bg-cream"
-              : "border-border-default bg-paper hover:border-copper hover:bg-cream-soft"
-          }`}
-        >
-          <div className="flex min-w-0 flex-col gap-1">
+      <div className="grid grid-cols-2 gap-2">
+        {profile.tiers.map((tier) => (
+          <button
+            key={tier.id}
+            type="button"
+            onClick={() => onConfirm(tier.range)}
+            className={`group flex flex-col gap-1 rounded-xl border px-4 py-3.5 text-left transition-colors ${
+              tier.isTypical
+                ? "border-neutral-400 bg-neutral-50 hover:bg-neutral-100"
+                : "border-neutral-300 bg-white hover:border-neutral-400 hover:bg-neutral-50"
+            }`}
+          >
             <div className="flex flex-wrap items-center gap-2">
               <p className="font-sans text-sm font-semibold text-ink">
                 {tier.title}
               </p>
-              <span className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-copper">
+              <span className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ink-muted">
                 {tier.range}
               </span>
               {tier.isTypical && (
-                <span className="rounded-pill bg-copper px-2 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-[0.18em] text-paper">
+                <span className="rounded-pill bg-neutral-700 px-2 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-[0.18em] text-white">
                   {isPersonalized ? "Typical" : "Most booked"}
                 </span>
               )}
@@ -1105,10 +1105,9 @@ function GuestsPicker({
             <p className="font-sans text-xs leading-4 text-ink-muted">
               {tier.blurb}
             </p>
-          </div>
-          <ArrowRight className="h-4 w-4 flex-none text-ink-muted transition-colors group-hover:text-copper" />
-        </button>
-      ))}
+          </button>
+        ))}
+      </div>
 
       {!customOpen ? (
         <button

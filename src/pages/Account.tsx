@@ -35,7 +35,7 @@ const Account = () => {
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
-          <Link to="/" className="font-serif text-lg tracking-[0.18em]">NOBU HOTEL</Link>
+          <Link to="/direct" className="font-serif text-lg tracking-[0.18em]">NOBU HOTEL</Link>
           <div className="flex items-center gap-4 text-sm">
             <span className="hidden text-muted-foreground sm:inline">{user.email}</span>
             <button

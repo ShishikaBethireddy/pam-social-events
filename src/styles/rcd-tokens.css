@@ -71,14 +71,19 @@
   --color-ink-muted:        #948D80;
 
   --color-paper:            #FFFFFF;
-  --color-canvas:           #F5EFE6;
-  --color-cream:            #E8DDD0;
-  --color-cream-soft:       #F0E8DC;
+  /* Surfaces retinted from warm cream to a soft Cabo-sunset lavender so
+     the neutral fills read purple-family instead of yellow/mustard. */
+  --color-canvas:           #F4F1F9;
+  --color-cream:            #E2D8F0;
+  --color-cream-soft:       #EDE7F6;
 
-  --color-copper:           #B4814D;
-  --color-copper-hover:     #9A6E40;
-  --color-copper-active:    #805B33;
-  --color-copper-soft:      #E8D5BD;
+  /* Copper accents remapped to the Cabo-sunset purple so the whole
+     app speaks the Social Events brand color (the top ribbon hue)
+     instead of the legacy mustard/copper. */
+  --color-copper:           #7B4B94;
+  --color-copper-hover:     #6A3F82;
+  --color-copper-active:    #5B3A7A;
+  --color-copper-soft:      #C8AEDA;
 
   /* Cabo sunset — the social-events brand band. A warm dusk purple
      anchored by a horizontal gradient from twilight → plum → rose. */

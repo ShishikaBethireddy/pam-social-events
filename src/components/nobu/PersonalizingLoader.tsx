@@ -54,14 +54,8 @@ export function PersonalizingLoader({
     <div
       role="status"
       aria-live="polite"
-      className="relative overflow-hidden rounded-md border border-copper/30 bg-cream-soft px-5 py-6 md:px-7 md:py-8"
+      className="animate-[bubble-in_0.4s_ease-out] px-1 py-2"
     >
-      {/* Shimmer sweep — gentle copper sheen across the card */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 bg-gradient-to-r from-transparent via-copper/10 to-transparent animate-loader-shimmer"
-      />
-
       {/* Header */}
       <div className="flex items-start gap-3">
         <div className="relative flex h-10 w-10 shrink-0 items-center justify-center">
