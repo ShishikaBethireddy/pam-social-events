@@ -76,6 +76,25 @@
     --sidebar-accent-foreground: 60 2% 16%;
     --sidebar-border: 36 22% 87%;
     --sidebar-ring: 279 33% 44%;
+
+    /* Event Planning workspace — neutral grey ramp + purple brand ramp.
+       Channels only (no hsl()) so Tailwind's hsl(var(--x) / <alpha>)
+       wrapper resolves opacity modifiers. Greys are neutral to match the
+       white/grey platform surfaces; brand is the Cabo-sunset purple. */
+    --grey-50: 0 0% 98%;
+    --grey-100: 0 0% 95%;
+    --grey-200: 0 0% 89%;
+    --grey-300: 0 0% 78%;
+    --grey-400: 0 0% 60%;
+    --grey-500: 0 0% 45%;
+    --grey-600: 0 0% 33%;
+    --grey-700: 0 0% 24%;
+    --grey-800: 0 0% 15%;
+    --grey-900: 0 0% 11%;
+    --brand-100: 270 44% 94%;       /* lavender wash */
+    --brand-300: 275 37% 80%;       /* light purple */
+    --brand-500: 279 33% 44%;       /* Cabo-sunset purple */
+    --brand-700: 279 38% 31%;       /* deep purple */
   }
 
   .dark {
@@ -275,4 +294,14 @@
   font-size: 8px;
   line-height: 12px;
   letter-spacing: 1px;
+}
+
+/* Soft paper / dotted texture — faint enough to keep text fully legible */
+.bg-texture-soft {
+  background-color: hsl(265 42% 89% / 0.16);
+  background-image:
+    radial-gradient(hsl(279 33% 44% / 0.05) 1px, transparent 1px),
+    radial-gradient(hsl(279 33% 44% / 0.04) 1px, transparent 1px);
+  background-size: 22px 22px, 22px 22px;
+  background-position: 0 0, 11px 11px;
 }

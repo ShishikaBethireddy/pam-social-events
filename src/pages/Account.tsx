@@ -127,12 +127,16 @@ const Account = () => {
                     </span>
                     <div className="flex items-center gap-3">
                       <button
-                        onClick={() => {
-                          navigate(`/portal/${e.id}`);
-                        }}
+                        onClick={() => navigate(`/portal/${e.id}`)}
+                        className="rounded-full border border-border px-4 py-2 text-xs font-medium text-foreground hover:bg-secondary/60"
+                      >
+                        Event portal
+                      </button>
+                      <button
+                        onClick={() => navigate(`/planning/${e.id}`)}
                         className="rounded-full bg-primary px-4 py-2 text-xs font-medium text-primary-foreground hover:bg-primary/90"
                       >
-                        Open event portal
+                        Plan my event
                       </button>
                       <button
                         onClick={() => remove(e.id)}

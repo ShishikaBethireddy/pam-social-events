@@ -421,12 +421,6 @@ export const SpaceGallery = ({
       <h3 className="mt-2 font-serif text-2xl md:text-3xl leading-tight">
         Spaces curated for your celebration
       </h3>
-      <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-        Each venue is hand-selected from Nobu Hotel Los Cabos. Tap{" "}
-        <span className="text-foreground">Explore</span> for details, or{" "}
-        <span className="text-foreground">Select</span> to lock it in.
-      </p>
-
       <div className="mt-6 grid gap-5 md:grid-cols-2">
         {SPACES.map((s) => {
           const isOpen = explored === s.name;

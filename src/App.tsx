@@ -22,6 +22,7 @@ import Auth from "./pages/Auth.tsx";
 import Account from "./pages/Account.tsx";
 import EstimateDetail from "./pages/EstimateDetail.tsx";
 import EventPortal from "./pages/EventPortal.tsx";
+import EventPlanning from "./pages/EventPlanning.tsx";
 import Preview from "./pages/Preview.tsx";
 
 const queryClient = new QueryClient();
@@ -63,6 +64,11 @@ const App = () => (
           <Route path="/account" element={<Account />} />
           <Route path="/estimate/:id" element={<EstimateDetail />} />
           <Route path="/portal/:id" element={<EventPortal />} />
+          {/* Event Planning workspace (Direct Booking only). Hosts land here
+              after submitting the deposit or tapping "Plan My Event" — a
+              tracker-rail workspace for guests, rooms, catering, spaces,
+              décor, schedule, entertainment and budget. */}
+          <Route path="/planning/:id/*" element={<EventPlanning />} />
           {/* /preview/:kind renders the chat sub-pickers in isolation
               (spaces, fnb) for design iteration without driving the full
               chat flow. */}

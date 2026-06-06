@@ -75,7 +75,8 @@ const Worldpay = () => {
       }),
     );
     setTimeout(() => {
-      navigate(paidId ? `/portal/${paidId}` : "/saved");
+      // Booking complete → straight into the Event Planning workspace.
+      navigate(`/planning/${paidId ?? "new"}`);
     }, 1600);
   };
 

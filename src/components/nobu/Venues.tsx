@@ -60,30 +60,30 @@ export const Venues = () => (
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
         {venues.map((v) => (
           <article
             key={v.name}
-            className="group flex flex-col overflow-hidden rounded-xl border border-paper/15 bg-white/5 transition hover:border-paper/30"
+            className="group flex flex-col overflow-hidden rounded-xl bg-white/[0.06] transition hover:bg-white/[0.1]"
           >
-            <div className="aspect-[4/3] overflow-hidden bg-ink">
+            <div className="aspect-[3/2] overflow-hidden bg-ink">
               <img
                 src={v.img}
                 alt={`${v.name} — ${v.type}`}
                 width={640}
-                height={480}
+                height={427}
                 loading="lazy"
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>
-            <div className="flex flex-1 flex-col p-4">
-              <p className="eyebrow text-[10px] text-copper-soft">{v.type}</p>
-              <h3 className="font-title text-xl mt-1.5 text-paper leading-tight">{v.name}</h3>
-              <div className="mt-2 inline-flex w-fit items-center gap-1.5 rounded-pill border border-paper/20 bg-white/5 px-2.5 py-1 text-[11px] font-sans text-paper">
+            <div className="flex flex-1 flex-col p-3 sm:p-4">
+              <p className="eyebrow text-[9px] sm:text-[10px] text-copper-soft">{v.type}</p>
+              <h3 className="font-title text-base sm:text-xl mt-1 sm:mt-1.5 text-paper leading-tight">{v.name}</h3>
+              <div className="mt-2 inline-flex w-fit items-center gap-1.5 rounded-pill border border-paper/20 bg-white/5 px-2 py-1 text-[10px] sm:text-[11px] font-sans text-paper">
                 <Users className="h-3 w-3 text-copper-soft" />
                 {v.capacity}
               </div>
-              <p className="mt-2.5 line-clamp-3 font-sans text-[13px] text-paper/70 leading-relaxed">
+              <p className="mt-2 sm:mt-2.5 line-clamp-3 font-sans text-[12px] sm:text-[13px] text-paper/70 leading-relaxed">
                 {v.desc}
               </p>
             </div>

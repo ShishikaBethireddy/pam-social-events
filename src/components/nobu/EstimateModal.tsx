@@ -118,7 +118,7 @@ export const EstimateModal = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="p-0 gap-0 border-border bg-white sm:max-w-md sm:rounded-t-3xl sm:rounded-b-3xl rounded-t-3xl rounded-b-none data-[state=open]:slide-in-from-bottom data-[state=closed]:slide-out-to-bottom"
+        className="p-0 gap-0 border-border bg-white w-[calc(100%-2rem)] max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-3xl"
       >
         {view === "contact" ? (
         <div className="px-6 pt-7 pb-6 sm:px-8 sm:pt-8">

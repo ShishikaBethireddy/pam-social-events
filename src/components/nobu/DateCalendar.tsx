@@ -100,10 +100,10 @@ export const DateCalendar = ({
         <p className="font-serif text-lg md:text-xl">When would you like to celebrate?</p>
         <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
           <span className="flex items-center gap-1.5">
-            <span className="inline-block h-3 w-3 rounded-sm bg-accent/25" /> Best price
+            <span className="inline-block h-3 w-3 rounded-sm bg-[#D9B3F0]" /> Best price
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="inline-block h-3 w-3 rounded-sm bg-primary" /> Prime
+            <span className="inline-block h-3 w-3 rounded-sm bg-[#BB8FDE]" /> Prime
           </span>
           <span className="flex items-center gap-1.5">
             <span className="relative inline-block h-3 w-3 rounded-sm bg-secondary">
@@ -167,9 +167,9 @@ export const DateCalendar = ({
           const isSelected = selected && c.date.toDateString() === selected.toDateString();
           const base =
             "relative flex h-14 flex-col items-center justify-center rounded-sm text-sm transition";
-          let cls = "border border-transparent text-foreground hover:bg-secondary/60";
-          if (c.status === "best") cls = "bg-accent/15 text-foreground hover:bg-accent/25";
-          else if (c.status === "event") cls = "bg-primary text-primary-foreground hover:bg-primary/90";
+          let cls = "border border-transparent bg-secondary/40 text-foreground hover:bg-secondary/70";
+          if (c.status === "best") cls = "bg-[#D9B3F0] text-foreground hover:bg-[#CFA1EC]";
+          else if (c.status === "event") cls = "bg-[#BB8FDE] text-foreground hover:bg-[#B07FD9]";
           else if (c.status === "unavailable")
             cls = "bg-secondary/40 text-muted-foreground/50 cursor-not-allowed";
           const selectedCls = isSelected ? " ring-2 ring-accent ring-offset-1" : "";

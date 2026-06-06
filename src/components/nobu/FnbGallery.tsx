@@ -112,17 +112,17 @@ export function FnbGallery({ onSelect }: { onSelect: (label: string) => void }) 
     <div className="overflow-hidden rounded-xl border border-border bg-white p-0 shadow-rcd-sm">
       {/* ── Menu header — printed-card feel ── */}
       <div className="relative border-b border-double border-border px-6 pt-6 pb-5 text-center md:px-10 md:pt-8 md:pb-6">
-        <p className="font-serif text-[11px] uppercase tracking-[0.45em] text-muted-foreground">
+        <p className="text-xs uppercase tracking-[0.28em] text-foreground/70">
           Allie&rsquo;s Tasting Menu
         </p>
         <h3 className="mt-2 font-serif text-2xl italic leading-tight text-foreground md:text-3xl">
           Dining &amp; Beverage
         </h3>
-        <p className="mx-auto mt-2 max-w-md font-serif text-[13px] italic leading-snug text-muted-foreground">
+        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-foreground/75">
           Six culinary directions, each anchored to a Nobu Los Cabos
           restaurant. Tap a course for the chef&rsquo;s note.
         </p>
-        <p className="mt-3 font-serif text-[10px] font-semibold uppercase tracking-[0.35em] text-sunset-dawn">
+        <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-sunset-dawn">
           {styles.length} courses · select one
         </p>
       </div>
@@ -140,7 +140,7 @@ export function FnbGallery({ onSelect }: { onSelect: (label: string) => void }) 
                 aria-expanded={open}
                 className="group flex w-full items-start gap-3 text-left"
               >
-                <span className="mt-2 font-serif text-[10px] uppercase tracking-[0.3em] text-muted-foreground md:mt-3">
+                <span className="mt-2 text-[10px] uppercase tracking-[0.3em] text-muted-foreground md:mt-3">
                   {String(i + 1).padStart(2, "0")}
                 </span>
 
@@ -162,24 +162,24 @@ export function FnbGallery({ onSelect }: { onSelect: (label: string) => void }) 
                       className="hidden flex-1 translate-y-[-3px] border-b border-dotted border-border md:block"
                       aria-hidden="true"
                     />
-                    <span className="hidden font-serif text-sm tracking-[0.2em] text-accent md:inline">
+                    <span className="hidden text-sm font-medium tracking-[0.2em] text-accent md:inline">
                       {s.tier}
                     </span>
                   </span>
-                  <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                    <span className="font-serif text-[11px] font-semibold uppercase tracking-[0.16em] text-sunset-dawn">
+                  <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                    <span className="text-xs font-semibold uppercase tracking-[0.12em] text-sunset-dawn">
                       {s.cuisine}
                     </span>
-                    <span className="text-muted-foreground/40">·</span>
-                    <span className="inline-flex items-center gap-1 font-serif text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                      <MapPin className="h-3 w-3" strokeWidth={1.4} />
+                    <span className="text-muted-foreground/50">·</span>
+                    <span className="inline-flex items-center gap-1 text-xs uppercase tracking-[0.1em] text-foreground/65">
+                      <MapPin className="h-3.5 w-3.5" strokeWidth={1.5} />
                       {s.venue}
                     </span>
-                    <span className="md:hidden font-serif text-[11px] tracking-[0.2em] text-accent">
+                    <span className="md:hidden text-xs font-medium tracking-[0.15em] text-accent">
                       · {s.tier}
                     </span>
                   </span>
-                  <span className="mt-1.5 line-clamp-2 font-serif text-[13px] leading-snug text-muted-foreground">
+                  <span className="mt-2 line-clamp-2 text-sm leading-relaxed text-foreground/75">
                     {s.description}
                   </span>
                 </span>
@@ -195,17 +195,17 @@ export function FnbGallery({ onSelect }: { onSelect: (label: string) => void }) 
               {/* Row 2 — expanded note + highlights + Select */}
               {open && (
                 <div className="ml-[68px] mt-4 flex flex-col gap-3 border-l-2 border-double border-accent/60 pl-4 md:ml-[88px] md:pl-5">
-                  <p className="font-serif text-[13px] italic leading-relaxed text-foreground">
+                  <p className="font-serif text-sm italic leading-relaxed text-foreground">
                     &ldquo;{s.note}&rdquo;
-                    <span className="ml-1 font-serif text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+                    <span className="ml-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
                       — chef
                     </span>
                   </p>
-                  <ul className="flex flex-wrap gap-x-4 gap-y-1">
+                  <ul className="flex flex-wrap gap-x-4 gap-y-1.5">
                     {s.highlights.map((h) => (
                       <li
                         key={h}
-                        className="flex items-center gap-1.5 font-serif text-[12px] text-muted-foreground"
+                        className="flex items-center gap-1.5 text-[13px] text-foreground/75"
                       >
                         <Plus className="h-3 w-3 text-accent" strokeWidth={1.6} />
                         {h}
@@ -219,7 +219,7 @@ export function FnbGallery({ onSelect }: { onSelect: (label: string) => void }) 
                         e.stopPropagation();
                         onSelect(`${s.name} · ${s.venue}`);
                       }}
-                      className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2 font-serif text-[11px] uppercase tracking-[0.3em] text-background transition hover:bg-foreground/85"
+                      className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2 text-[11px] uppercase tracking-[0.3em] text-background transition hover:bg-foreground/85"
                     >
                       Add to menu
                     </button>
@@ -233,10 +233,10 @@ export function FnbGallery({ onSelect }: { onSelect: (label: string) => void }) 
 
       {/* ── Footer — printed-menu flourish ── */}
       <div className="flex flex-col items-center gap-1 border-t border-double border-border px-6 py-4">
-        <span className="font-serif text-[9px] uppercase tracking-[0.45em] text-muted-foreground">
+        <span className="text-[9px] uppercase tracking-[0.45em] text-muted-foreground">
           · à votre santé ·
         </span>
-        <p className="font-serif text-[11px] italic text-muted-foreground">
+        <p className="text-[11px] italic text-muted-foreground">
           Pairings &amp; dietary adjustments made on request.
         </p>
       </div>

@@ -32,7 +32,7 @@ type AddOn = { id: string; title: string; desc: string; price: number };
 // The whole portal (hero image, copy, plan inclusions, add-ons, tab
 // labels and the group noun) is driven by the event type the planner
 // chose in the chat flow (stored on the estimate as `eventType`).
-type EventTheme = {
+export type EventTheme = {
   hero: string;
   badge: string;
   portalLabel: string;
@@ -412,7 +412,7 @@ const EVENT_THEMES: Record<string, EventTheme> = {
   },
 };
 
-function resolveTheme(eventType?: string): EventTheme {
+export function resolveTheme(eventType?: string): EventTheme {
   if (!eventType) return DEFAULT_THEME;
   const t = eventType.toLowerCase();
   if (t.includes("bachelorette")) return EVENT_THEMES.bachelorette;
@@ -595,6 +595,17 @@ const EventPortal = () => {
                 <MapPin className="h-4 w-4 text-accent" />
                 Cabo San Lucas, MX
               </span>
+            </div>
+
+            {/* Plan My Event → the full planning workspace */}
+            <div className="mt-2">
+              <button
+                onClick={() => navigate(`/planning/${id}`)}
+                className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 font-sans text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-foreground transition hover:bg-accent/90"
+              >
+                <Sparkles className="h-3.5 w-3.5" strokeWidth={2} />
+                Plan My Event
+              </button>
             </div>
           </div>
         </div>

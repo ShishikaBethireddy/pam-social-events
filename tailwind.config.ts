@@ -147,6 +147,32 @@ export default {
           bg: "var(--color-disabled-bg)",
           fg: "var(--color-disabled-fg)",
         },
+
+        // ----- Event Planning workspace ----------------------------------
+        // Neutral grey ramp + purple brand ramp backing the host-facing
+        // Event Planning experience (src/pages/EventPlanning.tsx). Ported
+        // from the Nobu planning reference and re-pointed at the Social
+        // Events purple so `bg-brand-500`, `text-brand-700`, `bg-grey-50`
+        // resolve to on-brand values. `<alpha-value>` keeps `/10` opacity
+        // modifiers working.
+        grey: {
+          50: "hsl(var(--grey-50) / <alpha-value>)",
+          100: "hsl(var(--grey-100) / <alpha-value>)",
+          200: "hsl(var(--grey-200) / <alpha-value>)",
+          300: "hsl(var(--grey-300) / <alpha-value>)",
+          400: "hsl(var(--grey-400) / <alpha-value>)",
+          500: "hsl(var(--grey-500) / <alpha-value>)",
+          600: "hsl(var(--grey-600) / <alpha-value>)",
+          700: "hsl(var(--grey-700) / <alpha-value>)",
+          800: "hsl(var(--grey-800) / <alpha-value>)",
+          900: "hsl(var(--grey-900) / <alpha-value>)",
+        },
+        brand: {
+          100: "hsl(var(--brand-100) / <alpha-value>)",
+          300: "hsl(var(--brand-300) / <alpha-value>)",
+          500: "hsl(var(--brand-500) / <alpha-value>)",
+          700: "hsl(var(--brand-700) / <alpha-value>)",
+        },
         "border-strong": "var(--color-border-strong)",
         "border-default": "var(--color-border-default)",
         "border-subtle": "var(--color-border-subtle)",
